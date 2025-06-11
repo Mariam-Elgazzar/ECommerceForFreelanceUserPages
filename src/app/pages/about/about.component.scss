@@ -1,0 +1,133 @@
+.about-content {
+  .lead {
+    font-size: 1.1rem;
+    line-height: 1.7;
+  }
+}
+
+.about-image {
+  img {
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.02);
+    }
+  }
+}
+
+.stats-section {
+  .stat-item {
+    .display-4 {
+      font-size: 3rem;
+
+      @media (max-width: 768px) {
+        font-size: 2rem;
+      }
+    }
+  }
+}
+
+.value-card {
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-10px);
+  }
+
+  .card {
+    border-radius: 15px;
+  }
+
+  .value-icon {
+    i {
+      transition: transform 0.3s ease;
+    }
+  }
+
+  &:hover .value-icon i {
+    transform: scale(1.1);
+  }
+}
+
+.team-card {
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-10px);
+  }
+
+  .card {
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  .card-img-wrapper {
+    overflow: hidden;
+
+    .card-img-top {
+      height: 250px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+  }
+
+  &:hover .card-img-top {
+    transform: scale(1.1);
+  }
+}
+
+.cta-section {
+  background: linear-gradient(135deg, #333, #555) !important;
+}
+
+.breadcrumb {
+  background: transparent;
+  padding: 0;
+
+  .breadcrumb-item {
+    a {
+      color: #ffc107;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.btn {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &.btn-warning:hover {
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+  }
+}
+
+@media (max-width: 768px) {
+  .display-4 {
+    font-size: 2rem;
+  }
+
+  .about-content {
+    margin-bottom: 2rem;
+  }
+
+  .stats-section {
+    padding: 2rem !important;
+  }
+
+  .cta-section {
+    padding: 2rem !important;
+  }
+
+  .team-card .card-img-top {
+    height: 200px;
+  }
+}

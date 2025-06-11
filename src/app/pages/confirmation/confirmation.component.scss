@@ -1,0 +1,167 @@
+.success-icon {
+  font-size: 5rem;
+}
+
+.order-number {
+  font-family: 'Courier New', monospace;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+}
+
+[dir="rtl"] .timeline {
+  padding-left: 0;
+  padding-right: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 1rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #dee2e6;
+}
+
+[dir="rtl"] .timeline::before {
+  left: auto;
+  right: 1rem;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-icon {
+  position: absolute;
+  left: -0.75rem;
+  top: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  border: 3px solid white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+[dir="rtl"] .timeline-icon {
+  left: auto;
+  right: -0.75rem;
+}
+
+.timeline-content {
+  margin-left: 2rem;
+}
+
+[dir="rtl"] .timeline-content {
+  margin-left: 0;
+  margin-right: 2rem;
+}
+
+.timeline-content h6 {
+  margin-bottom: 0.5rem;
+  color: #495057;
+}
+
+.card {
+  border: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+  color: #0c5460;
+}
+
+@media (max-width: 768px) {
+  .success-icon {
+    font-size: 3rem;
+  }
+
+  .display-4 {
+    font-size: 2rem;
+  }
+
+  .btn-lg {
+    display: block;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .btn-lg:last-child {
+    margin-bottom: 0;
+  }
+
+  .timeline {
+    padding-left: 1.5rem;
+  }
+
+  [dir="rtl"] .timeline {
+    padding-left: 0;
+    padding-right: 1.5rem;
+  }
+
+  .timeline-content {
+    margin-left: 1.5rem;
+  }
+
+  [dir="rtl"] .timeline-content {
+    margin-left: 0;
+    margin-right: 1.5rem;
+  }
+}
+
+/* Animation */
+.success-icon {
+  animation: bounceIn 0.8s ease-out;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

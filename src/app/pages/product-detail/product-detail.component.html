@@ -1,0 +1,134 @@
+<div class="container-fluid py-4" *ngIf="!loading && product">
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/">الرئيسية</a></li>
+      <li class="breadcrumb-item"><a routerLink="/products">المنتجات</a></li>
+      <li class="breadcrumb-item active">{{ product.nameAr }}</li>
+    </ol>
+  </nav>
+
+  <!-- Product Details -->
+  <div class="row">
+    <!-- Product Images -->
+    <div class="col-lg-6 mb-4">
+      <div class="product-images">
+        <div class="main-image mb-3">
+          <img
+            [src]="productImages[selectedImageIndex]"
+            alt="{{product.nameAr}}"
+            class="img-fluid rounded">
+        </div>
+        <div class="thumbnail-images">
+          <div class="row g-2">
+            <div class="col-4" *ngFor="let image of productImages; let i = index">
+              <img
+                [src]="image"
+                alt="{{product.nameAr}}"
+                class="img-fluid rounded thumbnail"
+                [class.active]="selectedImageIndex === i"
+                (click)="selectImage(i)">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Info -->
+    <div class="col-lg-6">
+      <div class="product-info">
+        <h1 class="product-title mb-3">{{ product.nameAr }}</h1>
+        <div class="product-meta mb-3">
+          <span class="badge bg-secondary me-2">{{ product.category }}</span>
+          <span class="text-muted">رقم المنتج: #{{ product.id }}</span>
+        </div>
+
+        <div class="product-price mb-4">
+          <span class="h2 text-warning">{{ product.price | currency:'SAR':'symbol':'1.2-2' }}</span>
+        </div>
+
+        <div class="product-description mb-4">
+          <h5>وصف المنتج</h5>
+          <p class="text-muted">{{ product.descriptionAr }}</p>
+        </div>
+
+        <!-- Quantity and Add to Cart -->
+        <div class="product-actions">
+          <div class="quantity-selector mb-3">
+            <label class="form-label">الكمية:</label>
+            <div class="input-group quantity-width">
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                (click)="decreaseQuantity()">
+                -
+              </button>
+              <input
+                type="number"
+                class="form-control text-center"
+                [(ngModel)]="quantity"
+                min="1"
+                placeholder="أدخل الكمية"
+                title="أدخل الكمية">
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                (click)="increaseQuantity()">
+                +
+              </button>
+            </div>
+          </div>
+
+          <div class="d-grid gap-2 d-md-flex">
+            <button
+              class="btn btn-warning btn-lg flex-fill"
+              (click)="addToCart()">
+              <i class="fas fa-shopping-cart me-2"></i>
+              إضافة للسلة
+            </button>
+            <button class="btn btn-outline-danger btn-lg" title="إضافة إلى المفضلة">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Product Features -->
+        <div class="product-features mt-4">
+          <h5>مميزات المنتج</h5>
+          <ul class="list-unstyled">
+            <li><i class="fas fa-check text-success me-2"></i>جودة عالية</li>
+            <li><i class="fas fa-check text-success me-2"></i>ضمان لمدة سنة</li>
+            <li><i class="fas fa-check text-success me-2"></i>شحن مجاني</li>
+            <li><i class="fas fa-check text-success me-2"></i>إرجاع مجاني خلال 30 يوم</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Related Products -->
+  <div class="related-products mt-5" *ngIf="relatedProducts.length > 0">
+    <h3 class="mb-4">منتجات ذات صلة</h3>
+    <div class="row">
+      <div class="col-lg-3 col-md-6 mb-4" *ngFor="let relatedProduct of relatedProducts">
+        <div class="card h-100">
+          <img [src]="relatedProduct.image" alt="{{relatedProduct.nameAr}}" class="card-img-top">
+          <div class="card-body">
+            <h6 class="card-title">{{ relatedProduct.nameAr }}</h6>
+            <p class="card-text text-warning">{{ relatedProduct.price | currency:'SAR':'symbol':'1.2-2' }}</p>
+            <a [routerLink]="['/product', relatedProduct.id]" class="btn btn-outline-warning btn-sm">
+              عرض التفاصيل
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="loading" class="text-center py-5">
+  <div class="spinner-border text-warning" role="status">
+    <span class="visually-hidden">جاري التحميل...</span>
+  </div>
+</div>

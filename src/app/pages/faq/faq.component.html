@@ -1,0 +1,109 @@
+<div class="container-fluid py-4">
+  <!-- Page Header -->
+  <div class="row mb-5">
+    <div class="col-12 text-center">
+      <h1 class="display-4 mb-3">الأسئلة الشائعة</h1>
+      <p class="lead text-muted">إجابات على الأسئلة الأكثر شيوعاً</p>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb justify-content-center">
+          <li class="breadcrumb-item"><a routerLink="/">الرئيسية</a></li>
+          <li class="breadcrumb-item active">الأسئلة الشائعة</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Search and Filter -->
+  <div class="row mb-4">
+    <div class="col-lg-8 mx-auto">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-8 mb-3 mb-md-0">
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="ابحث في الأسئلة الشائعة..."
+                  [(ngModel)]="searchTerm"
+                  (input)="filterFaqs()">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label for="faqCategorySelect" class="form-label visually-hidden">اختر الفئة</label>
+              <select
+                id="faqCategorySelect"
+                class="form-select"
+                [(ngModel)]="selectedCategory"
+                (change)="filterFaqs()"
+                aria-label="اختر الفئة">
+                <option value="">جميع الفئات</option>
+                <option *ngFor="let category of categories" [value]="category">
+                  {{ getCategoryName(category) }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ List -->
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <div *ngIf="filteredFaqs.length === 0" class="text-center py-5">
+        <i class="fas fa-question-circle fa-3x text-muted mb-3"></i>
+        <h5>لم يتم العثور على أسئلة</h5>
+        <p class="text-muted">جرب تغيير كلمات البحث أو الفئة</p>
+      </div>
+
+      <div class="accordion" id="faqAccordion">
+        <div class="accordion-item mb-3" *ngFor="let faq of filteredFaqs; let i = index">
+          <h2 class="accordion-header">
+            <button
+              class="accordion-button collapsed"
+              [class.collapsed]="expandedFaq !== faq.id"
+              type="button"
+              (click)="toggleFaq(faq.id)">
+              <div class="d-flex align-items-center w-100">
+                <span class="badge bg-warning text-dark me-3">{{ getCategoryName(faq.category) }}</span>
+                <span class="flex-grow-1">{{ faq.questionAr }}</span>
+              </div>
+            </button>
+          </h2>
+          <div
+            class="accordion-collapse collapse"
+            [class.show]="expandedFaq === faq.id">
+            <div class="accordion-body">
+              <p class="mb-0">{{ faq.answerAr }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Support -->
+  <div class="row mt-5">
+    <div class="col-lg-8 mx-auto">
+      <div class="card border-0 bg-light">
+        <div class="card-body text-center py-4">
+          <h5 class="mb-3">لم تجد إجابة لسؤالك؟</h5>
+          <p class="text-muted mb-4">فريق الدعم الفني جاهز لمساعدتك</p>
+          <div class="d-flex justify-content-center gap-3">
+            <a routerLink="/support" class="btn btn-warning">
+              <i class="fas fa-headset me-2"></i>
+              تواصل مع الدعم
+            </a>
+            <a href="tel:+966111234567" class="btn btn-outline-warning">
+              <i class="fas fa-phone me-2"></i>
+              اتصل بنا
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

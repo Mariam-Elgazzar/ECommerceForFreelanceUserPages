@@ -1,0 +1,95 @@
+.support-card {
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  .card {
+    border-radius: 15px;
+  }
+
+  .support-icon {
+    i {
+      transition: transform 0.3s ease;
+    }
+  }
+
+  &:hover .support-icon i {
+    transform: scale(1.1);
+  }
+
+  .contact-info {
+    strong {
+      color: #333;
+      font-size: 0.95rem;
+    }
+  }
+}
+
+.card-header {
+  border-radius: 15px 15px 0 0 !important;
+  font-weight: 600;
+}
+
+.form-control, .form-select {
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-color: #ffc107;
+    box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+  }
+
+  &.is-invalid {
+    border-color: #dc3545;
+  }
+}
+
+.btn-warning {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+  }
+}
+
+.alert-success {
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+}
+
+.breadcrumb {
+  background: transparent;
+  padding: 0;
+
+  .breadcrumb-item {
+    a {
+      color: #ffc107;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .display-4 {
+    font-size: 2rem;
+  }
+
+  .support-card .support-icon i {
+    font-size: 2rem !important;
+  }
+
+  .card-body {
+    padding: 1.5rem !important;
+  }
+}

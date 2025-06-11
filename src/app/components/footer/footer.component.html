@@ -1,0 +1,161 @@
+<footer class="footer">
+  <!-- Main Footer -->
+  <div class="footer-main">
+    <div class="container">
+      <div class="row">
+        <!-- Company Info -->
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="footer-section">
+            <div class="footer-logo mb-3">
+              <img src="/placeholder.svg?height=60&width=200" alt="كاتربيلر" class="logo">
+            </div>
+            <p class="footer-description">
+              الوكيل المعتمد لشركة كاتربيلر في المملكة العربية السعودية. نقدم أحدث المعدات الثقيلة 
+              وقطع الغيار الأصلية مع خدمات ما بعد البيع المتميزة منذ أكثر من 50 عاماً.
+            </p>
+            
+            <!-- Contact Info -->
+            <div class="contact-info">
+              <div class="contact-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>{{ contactInfo.address }}</span>
+              </div>
+              <div class="contact-item">
+                <i class="fas fa-phone"></i>
+                <a [href]="'tel:' + contactInfo.phone">{{ contactInfo.phone }}</a>
+              </div>
+              <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <a [href]="'mailto:' + contactInfo.email">{{ contactInfo.email }}</a>
+              </div>
+              <div class="contact-item">
+                <i class="fas fa-clock"></i>
+                <span>{{ contactInfo.workingHours }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="col-lg-2 col-md-6 mb-4">
+          <div class="footer-section">
+            <h5 class="footer-title">الشركة</h5>
+            <ul class="footer-links">
+              <li *ngFor="let link of footerLinks.company">
+                <a [routerLink]="link.path">{{ link.label }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Products -->
+        <div class="col-lg-2 col-md-6 mb-4">
+          <div class="footer-section">
+            <h5 class="footer-title">المنتجات</h5>
+            <ul class="footer-links">
+              <li *ngFor="let link of footerLinks.products">
+                <a [routerLink]="link.path">{{ link.label }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Services -->
+        <div class="col-lg-2 col-md-6 mb-4">
+          <div class="footer-section">
+            <h5 class="footer-title">الخدمات</h5>
+            <ul class="footer-links">
+              <li *ngFor="let link of footerLinks.services">
+                <a [routerLink]="link.path">{{ link.label }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Newsletter & Social -->
+        <!-- <div class="col-lg-2 col-md-6 mb-4">
+          <div class="footer-section">
+            <h5 class="footer-title">تابعنا</h5>
+            
+            <div class="newsletter mb-4">
+              <p class="newsletter-text">اشترك في النشرة الإخبارية للحصول على آخر الأخبار والعروض</p>
+              <form (ngSubmit)="subscribeNewsletter()" class="newsletter-form">
+                <div class="input-group">
+                  <input 
+                    type="email" 
+                    class="form-control" 
+                    placeholder="بريدك الإلكتروني"
+                    [(ngModel)]="newsletterEmail"
+                    name="newsletter"
+                    required>
+                  <button class="btn btn-warning" type="submit" aria-label="إرسال البريد الإلكتروني">
+                    <i class="fas fa-paper-plane"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+            
+           Social Links
+            <div class="social-links">
+              <h6 class="social-title">تابعنا على</h6>
+              <div class="social-icons">
+                <a 
+                  *ngFor="let social of socialLinks" 
+                  [href]="social.url" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  [title]="social.platform"
+                  class="social-icon">
+                  <i [class]="social.icon"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+  
+  <!-- Certifications -->
+  <!-- <div class="footer-certifications">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <h6 class="cert-title">شهادات الجودة والاعتماد</h6>
+        </div>
+        <div class="col-md-6">
+          <div class="certifications">
+            <img src="/placeholder.svg?height=50&width=80" alt="ISO 9001" class="cert-logo">
+            <img src="/placeholder.svg?height=50&width=80" alt="Caterpillar Certified" class="cert-logo">
+            <img src="/placeholder.svg?height=50&width=80" alt="Saudi Standards" class="cert-logo">
+            <img src="/placeholder.svg?height=50&width=80" alt="Quality Assurance" class="cert-logo">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  
+  <!-- Bottom Footer -->
+  <div class="footer-bottom">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <div class="copyright">
+            <p>&copy; {{ currentYear }} كاتربيلر السعودية. جميع الحقوق محفوظة.</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="footer-bottom-links">
+            <a href="#" class="me-3">سياسة الخصوصية</a>
+            <a href="#" class="me-3">شروط الاستخدام</a>
+            <a href="#" class="me-3">سياسة الإرجاع</a>
+            <button class="btn btn-link scroll-top" (click)="scrollToTop()">
+              <i class="fas fa-arrow-up"></i>
+              العودة للأعلى
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

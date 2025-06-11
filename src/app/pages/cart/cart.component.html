@@ -1,0 +1,293 @@
+<div class="container py-4">
+  <!-- Page Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h1 class="mb-0">سلة التسوق</h1>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a routerLink="/">الرئيسية</a></li>
+            <li class="breadcrumb-item active">سلة التسوق</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty Cart State -->
+  <div *ngIf="cartItems.length === 0" class="empty-cart">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 text-center">
+        <div class="empty-cart-icon mb-4">
+          <i class="fas fa-shopping-cart fa-5x text-muted"></i>
+        </div>
+        <h2 class="mb-3">سلة التسوق فارغة</h2>
+        <p class="text-muted mb-4">لم تقم بإضافة أي منتجات إلى سلة التسوق بعد</p>
+        <a routerLink="/products" class="btn btn-warning btn-lg">
+          <i class="fas fa-shopping-bag me-2"></i>
+          تصفح المنتجات
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Content -->
+  <div *ngIf="cartItems.length > 0">
+    <div class="row">
+      <!-- Cart Items -->
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-light border-0 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">المنتجات ({{ getItemCount() }})</h5>
+            <div class="cart-actions">
+              <button class="btn btn-outline-secondary btn-sm me-2" (click)="shareCart()">
+                <i class="fas fa-share-alt me-1"></i>
+                مشاركة
+              </button>
+              <button class="btn btn-outline-danger btn-sm" (click)="clearCart()">
+                <i class="fas fa-trash me-1"></i>
+                إفراغ السلة
+              </button>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <div class="cart-item" *ngFor="let item of cartItems; trackBy: trackByProductId">
+              <div class="row g-0 align-items-center">
+                <!-- Product Image -->
+                <div class="col-md-2 col-3">
+                  <div class="product-image">
+                    <img [src]="item.product.image" alt="{{item.product.nameAr}}" class="img-fluid">
+                  </div>
+                </div>
+
+                <!-- Product Details -->
+                <div class="col-md-4 col-9">
+                  <div class="product-details">
+                    <h6 class="product-title mb-1">
+                      <a [routerLink]="['/products', item.product.id]" class="text-decoration-none">
+                        {{ item.product.nameAr }}
+                      </a>
+                    </h6>
+                    <p class="product-description text-muted small mb-2">
+                      {{ item.product.descriptionAr | slice:0:80 }}...
+                    </p>
+                    <div class="product-meta">
+                      <span class="badge bg-secondary me-2">{{ item.product.category }}</span>
+                      <span class="text-success small">
+                        <i class="fas fa-check-circle me-1"></i>
+                        متوفر في المخزن
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Quantity Controls -->
+                <div class="col-md-3 col-6">
+                  <div class="quantity-controls">
+                    <label class="form-label small">الكمية</label>
+                    <div class="input-group input-group-sm">
+                      <button
+                        class="btn btn-outline-secondary"
+                        type="button"
+                        (click)="decreaseQuantity(item)"
+                        [disabled]="item.quantity <= 1"
+                        title="إنقاص الكمية">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                      <input
+                        type="number"
+                        class="form-control text-center"
+                        [value]="item.quantity"
+                        (change)="updateQuantity(item.product.id, +$any($event.target).value)"
+                        min="1"
+                        max="99"
+                        placeholder="أدخل الكمية"
+                        title="تعديل الكمية">
+                      <button
+                        class="btn btn-outline-secondary"
+                        type="button"
+                        (click)="increaseQuantity(item)"
+                        title="زيادة الكمية">
+                        <i class="fas fa-plus"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Price and Actions -->
+                <div class="col-md-3 col-6">
+                  <div class="price-actions text-end">
+                    <div class="price mb-2">
+                      <div class="unit-price text-muted small">
+                        {{ item.product.price | currency:'SAR':'symbol':'1.0-0' }} / قطعة
+                      </div>
+                      <div class="total-price h6 text-warning mb-0">
+                        {{ getItemTotal(item) | currency:'SAR':'symbol':'1.0-0' }}
+                      </div>
+                    </div>
+                    <div class="item-actions">
+                      <button
+                        class="btn btn-link btn-sm text-muted p-0 me-2"
+                        (click)="saveForLater(item.product.id)"
+                        title="حفظ للاحقاً">
+                        <i class="fas fa-heart"></i>
+                      </button>
+                      <button
+                        class="btn btn-link btn-sm text-danger p-0"
+                        (click)="removeItem(item.product.id)"
+                        title="إزالة من السلة">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Promo Code Section -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h6 class="card-title mb-3">
+              <i class="fas fa-tag me-2"></i>
+              كود الخصم
+            </h6>
+            <div *ngIf="!isPromoApplied" class="promo-input">
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="أدخل كود الخصم"
+                  [(ngModel)]="promoCode">
+                <button
+                  class="btn btn-warning"
+                  type="button"
+                  (click)="applyPromoCode()"
+                  [disabled]="!promoCode.trim()">
+                  تطبيق
+                </button>
+              </div>
+              <small class="text-muted mt-2 d-block">
+                جرب: SAVE10, WELCOME, CATERPILLAR
+              </small>
+            </div>
+            <div *ngIf="isPromoApplied" class="promo-applied">
+              <div class="alert alert-success d-flex justify-content-between align-items-center mb-0">
+                <div>
+                  <i class="fas fa-check-circle me-2"></i>
+                  تم تطبيق كود الخصم: <strong>{{ promoCode }}</strong>
+                  <span class="badge bg-success ms-2">{{ (promoDiscount * 100).toFixed(0) }}% خصم</span>
+                </div>
+                <button class="btn btn-sm btn-outline-danger" (click)="removePromoCode()">
+                  إلغاء
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm sticky-top">
+          <div class="card-header bg-light border-0">
+            <h5 class="mb-0">ملخص الطلب</h5>
+          </div>
+          <div class="card-body">
+            <div class="order-summary">
+              <div class="summary-row">
+                <span>المجموع الفرعي ({{ getItemCount() }} منتج)</span>
+                <span>{{ getSubtotal() | currency:'SAR':'symbol':'1.0-0' }}</span>
+              </div>
+
+              <div class="summary-row" *ngIf="isPromoApplied">
+                <span class="text-success">
+                  <i class="fas fa-tag me-1"></i>
+                  خصم ({{ promoCode }})
+                </span>
+                <span class="text-success">-{{ getDiscount() | currency:'SAR':'symbol':'1.0-0' }}</span>
+              </div>
+
+              <div class="summary-row">
+                <span>الضريبة (15%)</span>
+                <span>{{ getTax() | currency:'SAR':'symbol':'1.0-0' }}</span>
+              </div>
+
+              <div class="summary-row">
+                <span>الشحن</span>
+                <span class="text-success">مجاناً</span>
+              </div>
+
+              <div class="summary-row total">
+                <span>الإجمالي</span>
+                <span>{{ getTotal() | currency:'SAR':'symbol':'1.0-0' }}</span>
+              </div>
+            </div>
+
+            <div class="checkout-actions mt-4">
+              <div class="d-grid gap-2">
+                <a routerLink="/checkout" class="btn btn-warning btn-lg">
+                  <i class="fas fa-credit-card me-2"></i>
+                  إتمام الطلب
+                </a>
+                <a routerLink="/products" class="btn btn-outline-secondary">
+                  <i class="fas fa-shopping-bag me-2"></i>
+                  مواصلة التسوق
+                </a>
+              </div>
+            </div>
+
+            <!-- Security Notice -->
+            <div class="security-notice mt-3">
+              <div class="d-flex align-items-center justify-content-center text-muted">
+                <i class="fas fa-shield-alt me-2"></i>
+                <small>دفع آمن ومضمون 100%</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Products -->
+    <div class="row mt-5" *ngIf="relatedProducts.length > 0">
+      <div class="col-12">
+        <h3 class="mb-4">منتجات قد تعجبك</h3>
+        <div class="row">
+          <div class="col-lg-3 col-md-6 mb-4" *ngFor="let product of relatedProducts">
+            <div class="card h-100 product-card">
+              <img [src]="product.image" alt="{{product.nameAr}}" class="card-img-top">
+              <div class="card-body d-flex flex-column">
+                <h6 class="card-title">{{ product.nameAr }}</h6>
+                <p class="card-text text-muted small flex-grow-1">
+                  {{ product.descriptionAr | slice:0:60 }}...
+                </p>
+                <div class="mt-auto">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="h6 text-warning mb-0">
+                      {{ product.price | currency:'SAR':'symbol':'1.0-0' }}
+                    </span>
+                    <small class="text-muted">{{ product.category }}</small>
+                  </div>
+                  <div class="d-grid gap-2">
+                    <button
+                      class="btn btn-warning btn-sm"
+                      (click)="addToCart(product)">
+                      إضافة للسلة
+                    </button>
+                    <a
+                      [routerLink]="['/products', product.id]"
+                      class="btn btn-outline-secondary btn-sm">
+                      عرض التفاصيل
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,194 @@
+<div class="container-fluid py-4">
+  <!-- Page Header -->
+  <div class="row mb-5">
+    <div class="col-12 text-center">
+      <h1 class="display-4 mb-3">الدعم والمساعدة</h1>
+      <p class="lead text-muted">نحن هنا لمساعدتك في أي وقت</p>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb justify-content-center">
+          <li class="breadcrumb-item"><a routerLink="/">الرئيسية</a></li>
+          <li class="breadcrumb-item active">الدعم</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Support Channels -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <h2 class="text-center mb-4">طرق التواصل</h2>
+      <div class="row g-4">
+        <div class="col-lg-3 col-md-6" *ngFor="let channel of supportChannels">
+          <div class="support-card">
+            <div class="card h-100 text-center border-0 shadow-sm">
+              <div class="card-body p-4">
+                <div class="support-icon mb-3">
+                  <i [class]="channel.icon + ' fa-3x text-warning'"></i>
+                </div>
+                <h5 class="card-title mb-2">{{ channel.title }}</h5>
+                <p class="card-text text-muted small mb-3">{{ channel.description }}</p>
+                <div class="contact-info">
+                  <strong class="d-block mb-1">{{ channel.contact }}</strong>
+                  <small class="text-success">{{ channel.available }}</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Form -->
+  <div class="row mb-5">
+    <div class="col-lg-8 mx-auto">
+      <div class="card border-0 shadow">
+        <div class="card-header bg-warning text-dark text-center">
+          <h3 class="mb-0">أرسل لنا رسالة</h3>
+        </div>
+        <div class="card-body p-4">
+          <div *ngIf="isSubmitted" class="alert alert-success" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.
+          </div>
+
+          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" *ngIf="!isSubmitted">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="name" class="form-label">الاسم الكامل *</label>
+                <input
+                  type="text"
+                  id="name"
+                  class="form-control"
+                  [class.is-invalid]="isFieldInvalid('name')"
+                  formControlName="name"
+                  placeholder="أدخل اسمك الكامل">
+                <div class="invalid-feedback">{{ getFieldError('name') }}</div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="email" class="form-label">البريد الإلكتروني *</label>
+                <input
+                  type="email"
+                  id="email"
+                  class="form-control"
+                  [class.is-invalid]="isFieldInvalid('email')"
+                  formControlName="email"
+                  placeholder="example@email.com">
+                <div class="invalid-feedback">{{ getFieldError('email') }}</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="phone" class="form-label">رقم الهاتف *</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  class="form-control"
+                  [class.is-invalid]="isFieldInvalid('phone')"
+                  formControlName="phone"
+                  placeholder="+966 50 123 4567">
+                <div class="invalid-feedback">{{ getFieldError('phone') }}</div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="category" class="form-label">نوع الاستفسار *</label>
+                <select
+                  id="category"
+                  class="form-select"
+                  [class.is-invalid]="isFieldInvalid('category')"
+                  formControlName="category">
+                  <option value="general">استفسار عام</option>
+                  <option value="technical">دعم فني</option>
+                  <option value="sales">مبيعات</option>
+                  <option value="parts">قطع غيار</option>
+                  <option value="warranty">ضمان</option>
+                </select>
+                <div class="invalid-feedback">{{ getFieldError('category') }}</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="subject" class="form-label">الموضوع *</label>
+                <input
+                  type="text"
+                  id="subject"
+                  class="form-control"
+                  [class.is-invalid]="isFieldInvalid('subject')"
+                  formControlName="subject"
+                  placeholder="موضوع الرسالة">
+                <div class="invalid-feedback">{{ getFieldError('subject') }}</div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="priority" class="form-label">الأولوية</label>
+                <select
+                  id="priority"
+                  class="form-select"
+                  formControlName="priority">
+                  <option value="low">منخفضة</option>
+                  <option value="medium">متوسطة</option>
+                  <option value="high">عالية</option>
+                  <option value="urgent">عاجلة</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label for="message" class="form-label">الرسالة *</label>
+              <textarea
+                id="message"
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('message')"
+                formControlName="message"
+                rows="5"
+                placeholder="اكتب رسالتك هنا..."></textarea>
+              <div class="invalid-feedback">{{ getFieldError('message') }}</div>
+            </div>
+
+            <div class="d-grid">
+              <button
+                type="submit"
+                class="btn btn-warning btn-lg"
+                [disabled]="isSubmitting">
+                <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+                {{ isSubmitting ? 'جاري الإرسال...' : 'إرسال الرسالة' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ Section -->
+  <div class="row">
+    <div class="col-12">
+      <h2 class="text-center mb-4">الأسئلة الشائعة</h2>
+      <div class="row">
+        <div class="col-lg-4 mb-4" *ngFor="let category of faqCategories">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-header bg-light">
+              <h5 class="mb-0">{{ category.title }}</h5>
+            </div>
+            <div class="card-body">
+              <ul class="list-unstyled">
+                <li class="mb-2" *ngFor="let question of category.questions">
+                  <a href="#" class="text-decoration-none text-muted">
+                    <i class="fas fa-question-circle text-warning me-2"></i>
+                    {{ question }}
+                  </a>
+                </li>
+              </ul>
+              <a routerLink="/faq" class="btn btn-outline-warning btn-sm">
+                عرض المزيد
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

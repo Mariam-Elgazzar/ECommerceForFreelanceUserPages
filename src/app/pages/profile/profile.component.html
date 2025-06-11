@@ -1,0 +1,294 @@
+<div class="container-fluid py-4">
+  <!-- Page Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/">الرئيسية</a></li>
+          <li class="breadcrumb-item active">الملف الشخصي</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Profile Sidebar -->
+    <div class="col-lg-3 mb-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body text-center">
+          <div class="profile-avatar mb-3">
+            <img [src]="user.avatar" alt="{{user.name}}" class="rounded-circle mb-3">
+            <label for="avatarInput" class="visually-hidden">تغيير الصورة الشخصية</label>
+            <input #avatarInput type="file" id="avatarInput" class="d-none" (change)="onFileSelected($event)" accept="image/*" title="تغيير الصورة الشخصية">
+            <button class="btn btn-outline-warning btn-sm" (click)="avatarInput.click()">
+              <i class="fas fa-camera me-1"></i>
+              تغيير الصورة
+            </button>
+          </div>
+          <h5 class="mb-1">{{ user.name }}</h5>
+          <p class="text-muted small mb-3">{{ user.email }}</p>
+          <p class="text-muted small">عضو منذ {{ user.joinDate | date:'yyyy/MM/dd' }}</p>
+        </div>
+      </div>
+
+      <!-- Navigation Menu -->
+      <div class="card border-0 shadow-sm mt-3">
+        <div class="list-group list-group-flush">
+          <button
+            class="list-group-item list-group-item-action border-0"
+            [class.active]="activeTab === 'profile'"
+            (click)="setActiveTab('profile')">
+            <i class="fas fa-user me-2"></i>
+            المعلومات الشخصية
+          </button>
+          <button
+            class="list-group-item list-group-item-action border-0"
+            [class.active]="activeTab === 'orders'"
+            (click)="setActiveTab('orders')">
+            <i class="fas fa-shopping-bag me-2"></i>
+            طلباتي
+          </button>
+          <button
+            class="list-group-item list-group-item-action border-0"
+            [class.active]="activeTab === 'password'"
+            (click)="setActiveTab('password')">
+            <i class="fas fa-lock me-2"></i>
+            تغيير كلمة المرور
+          </button>
+          <button
+            class="list-group-item list-group-item-action border-0"
+            [class.active]="activeTab === 'notifications'"
+            (click)="setActiveTab('notifications')">
+            <i class="fas fa-bell me-2"></i>
+            الإشعارات
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-lg-9">
+      <!-- Profile Information Tab -->
+      <div *ngIf="activeTab === 'profile'" class="card border-0 shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">المعلومات الشخصية</h5>
+          <button class="btn btn-outline-warning btn-sm" (click)="toggleEdit()">
+            <i [class]="isEditing ? 'fas fa-times' : 'fas fa-edit'" class="me-1"></i>
+            {{ isEditing ? 'إلغاء' : 'تعديل' }}
+          </button>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="profileForm" (ngSubmit)="onProfileSubmit()">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="name" class="form-label">الاسم الكامل</label>
+                <input
+                  type="text"
+                  id="name"
+                  class="form-control"
+                  [class.is-invalid]="isFieldInvalid('profile', 'name')"
+                  [readonly]="!isEditing"
+                  formControlName="name">
+                <div class="invalid-feedback">{{ getFieldError('profile', 'name') }}</div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="email" class="form-label">البريد الإلكتروني</label>
+                <input
+                  type="email"
+                  id="email"
+                  class="form-control"
+                  [class.is-invalid]="isFieldInvalid('profile', 'email')"
+                  [readonly]="!isEditing"
+                  formControlName="email">
+                <div class="invalid-feedback">{{ getFieldError('profile', 'email') }}</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="phone" class="form-label">رقم الهاتف</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  class="form-control"
+                  [readonly]="!isEditing"
+                  formControlName="phone">
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="city" class="form-label">المدينة</label>
+                <input
+                  type="text"
+                  id="city"
+                  class="form-control"
+                  [readonly]="!isEditing"
+                  formControlName="city">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="address" class="form-label">العنوان</label>
+              <textarea
+                id="address"
+                class="form-control"
+                [readonly]="!isEditing"
+                formControlName="address"
+                rows="3"></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="country" class="form-label">البلد</label>
+              <input
+                type="text"
+                id="country"
+                class="form-control"
+                [readonly]="!isEditing"
+                formControlName="country">
+            </div>
+
+            <div *ngIf="isEditing" class="d-grid">
+              <button
+                type="submit"
+                class="btn btn-warning"
+                [disabled]="isSubmitting || profileForm.invalid">
+                <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+                {{ isSubmitting ? 'جاري الحفظ...' : 'حفظ التغييرات' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Orders Tab -->
+      <div *ngIf="activeTab === 'orders'" class="card border-0 shadow-sm">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">طلباتي</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="orders.length === 0" class="text-center py-5">
+            <i class="fas fa-shopping-bag fa-3x text-muted mb-3"></i>
+            <h5>لا توجد طلبات</h5>
+            <p class="text-muted">لم تقم بأي طلبات حتى الآن</p>
+            <a routerLink="/products" class="btn btn-warning">تصفح المنتجات</a>
+          </div>
+
+          <div *ngIf="orders.length > 0" class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>رقم الطلب</th>
+                  <th>التاريخ</th>
+                  <th>الحالة</th>
+                  <th>عدد المنتجات</th>
+                  <th>المجموع</th>
+                  <th>الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let order of orders">
+                  <td><strong>{{ order.id }}</strong></td>
+                  <td>{{ order.date | date:'yyyy/MM/dd' }}</td>
+                  <td><span [class]="getStatusClass(order.status)">{{ order.status }}</span></td>
+                  <td>{{ order.items }}</td>
+                  <td>{{ order.total | currency:'SAR':'symbol':'1.2-2' }}</td>
+                  <td>
+                    <button class="btn btn-outline-warning btn-sm me-2">عرض</button>
+                    <button class="btn btn-outline-secondary btn-sm">تتبع</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Password Tab -->
+      <div *ngIf="activeTab === 'password'" class="card border-0 shadow-sm">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">تغيير كلمة المرور</h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()">
+            <div class="mb-3">
+              <label for="currentPassword" class="form-label">كلمة المرور الحالية</label>
+              <input
+                type="password"
+                id="currentPassword"
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('password', 'currentPassword')"
+                formControlName="currentPassword">
+              <div class="invalid-feedback">{{ getFieldError('password', 'currentPassword') }}</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="newPassword" class="form-label">كلمة المرور الجديدة</label>
+              <input
+                type="password"
+                id="newPassword"
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('password', 'newPassword')"
+                formControlName="newPassword">
+              <div class="invalid-feedback">{{ getFieldError('password', 'newPassword') }}</div>
+            </div>
+
+            <div class="mb-4">
+              <label for="confirmPassword" class="form-label">تأكيد كلمة المرور</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('password', 'confirmPassword')"
+                formControlName="confirmPassword">
+              <div class="invalid-feedback">{{ getFieldError('password', 'confirmPassword') }}</div>
+            </div>
+
+            <div class="d-grid">
+              <button
+                type="submit"
+                class="btn btn-warning"
+                [disabled]="isSubmitting || passwordForm.invalid">
+                <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+                {{ isSubmitting ? 'جاري التحديث...' : 'تحديث كلمة المرور' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Notifications Tab -->
+      <div *ngIf="activeTab === 'notifications'" class="card border-0 shadow-sm">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">إعدادات الإشعارات</h5>
+        </div>
+        <div class="card-body">
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+            <label class="form-check-label" for="emailNotifications">
+              إشعارات البريد الإلكتروني
+            </label>
+          </div>
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="smsNotifications">
+            <label class="form-check-label" for="smsNotifications">
+              إشعارات الرسائل النصية
+            </label>
+          </div>
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="orderUpdates" checked>
+            <label class="form-check-label" for="orderUpdates">
+              تحديثات الطلبات
+            </label>
+          </div>
+          <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" id="promotions" checked>
+            <label class="form-check-label" for="promotions">
+              العروض والخصومات
+            </label>
+          </div>
+          <button class="btn btn-warning">حفظ الإعدادات</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,96 @@
+.card-header {
+  padding: 1.25rem;
+  font-weight: 600;
+}
+
+.cart-items {
+  max-height: 300px;
+  overflow-y: auto;
+
+  .cart-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e9ecef;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .item-image {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 0.25rem;
+      margin-left: 1rem;
+    }
+
+    .item-details {
+      flex: 1;
+
+      .item-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .item-price {
+        font-weight: 600;
+        color: #ffc107;
+      }
+
+      .item-quantity {
+        font-size: 0.8rem;
+        color: #6c757d;
+      }
+    }
+  }
+}
+
+.order-summary {
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &.total {
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding-top: 1rem;
+      margin-top: 0.5rem;
+      border-top: 2px solid #e9ecef;
+    }
+  }
+}
+
+.promo-code {
+  .input-group {
+    .form-control {
+      border-start-end-radius: 0;
+      border-end-end-radius: 0;
+    }
+
+    .btn {
+      border-start-start-radius: 0;
+      border-end-start-radius: 0;
+    }
+  }
+}
+
+.secure-checkout {
+  color: #6c757d;
+  font-size: 0.9rem;
+
+  .payment-icons {
+    font-size: 1.5rem;
+    color: #495057;
+  }
+}
+
+@media (max-width: 992px) {
+  .card {
+    margin-top: 1.5rem;
+  }
+}

@@ -1,0 +1,64 @@
+<div class="card border-0 shadow-sm">
+  <div class="card-header bg-light border-0">
+    <h4 class="mb-0">ملخص الطلب</h4>
+  </div>
+  <div class="card-body">
+    <!-- Cart Items -->
+    <div class="cart-items">
+      <div class="cart-item" *ngFor="let item of cartService.items()">
+        <div class="d-flex align-items-center">
+          <img [src]="item.product.image" alt="item.product.nameAr" class="item-image">
+          <div class="item-details">
+            <h6 class="item-title mb-1">{{ item.product.nameAr }}</h6>
+            <div class="d-flex justify-content-between">
+              <span class="item-price">{{ item.product.price | currency:'SAR':'symbol':'1.0-0' }}</span>
+              <span class="item-quantity">الكمية: {{ item.quantity }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="order-summary mt-4">
+      <div class="summary-row">
+        <span>المجموع الفرعي</span>
+        <span>{{ getSubtotal() | currency:'SAR':'symbol':'1.0-0' }}</span>
+      </div>
+      <div class="summary-row">
+        <span>الشحن</span>
+        <span>{{ shippingCost === 0 ? 'مجاناً' : (shippingCost | currency:'SAR':'symbol':'1.0-0') }}</span>
+      </div>
+      <div class="summary-row">
+        <span>الضريبة (15%)</span>
+        <span>{{ getSubtotal() * 0.15 | currency:'SAR':'symbol':'1.0-0' }}</span>
+      </div>
+      <div class="summary-row total">
+        <span>الإجمالي</span>
+        <span>{{ total | currency:'SAR':'symbol':'1.0-0' }}</span>
+      </div>
+    </div>
+
+    <!-- Promo Code -->
+    <div class="promo-code mt-4">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="كود الخصم">
+        <button class="btn btn-outline-warning" type="button">تطبيق</button>
+      </div>
+    </div>
+
+    <!-- Secure Checkout Notice -->
+    <div class="secure-checkout mt-4">
+      <div class="d-flex align-items-center justify-content-center">
+        <i class="fas fa-lock me-2"></i>
+        <span>دفع آمن 100%</span>
+      </div>
+      <div class="payment-icons mt-2 text-center">
+        <i class="fab fa-cc-visa mx-1"></i>
+        <i class="fab fa-cc-mastercard mx-1"></i>
+        <i class="fab fa-cc-amex mx-1"></i>
+        <i class="fab fa-cc-paypal mx-1"></i>
+      </div>
+    </div>
+  </div>
+</div>

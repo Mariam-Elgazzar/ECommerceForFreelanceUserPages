@@ -1,0 +1,415 @@
+<div class="container py-5">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="mb-4 text-center">إتمام الطلب</h1>
+
+      <!-- Checkout Steps -->
+      <div class="checkout-steps mb-5">
+        <div class="row">
+          <div class="col-md-4">
+            <div
+              class="step"
+              [class.active]="currentStep === 1"
+              [class.completed]="currentStep > 1"
+            >
+              <div class="step-number">1</div>
+              <div class="step-title">المعلومات الشخصية</div>
+          <div class="col-md-4">
+            <div
+              class="step"
+              [class.active]="currentStep === 2"
+              [class.completed]="currentStep > 2"
+            >
+              <div class="step-number">2</div>
+              <div class="step-title">معلومات الشحن</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="step" [class.active]="currentStep === 3">
+              <div class="step-number">3</div>
+              <div class="step-title">الدفع والتأكيد</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Checkout Form -->
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+              <form [formGroup]="checkoutForm">
+                <!-- Step 1: Personal Information -->
+                <div *ngIf="currentStep === 1">
+                  <h3 class="mb-4">المعلومات الشخصية</h3>
+
+                  <div class="mb-3">
+                    <label for="fullName" class="form-label"
+                      >الاسم الكامل *</label
+                    >
+                    <input
+                      type="text"
+                      id="fullName"
+                      class="form-control"
+                      formControlName="fullName"
+                      [class.is-invalid]="isFieldInvalid('fullName')"
+                      placeholder="أدخل الاسم الكامل"
+                    />
+                    <div class="invalid-feedback">
+                      {{ getFieldError("fullName") }}
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="email" class="form-label"
+                      >البريد الإلكتروني *</label
+                    >
+                    <input
+                      type="email"
+                      id="email"
+                      class="form-control"
+                      formControlName="email"
+                      [class.is-invalid]="isFieldInvalid('email')"
+                      placeholder="example@email.com"
+                    />
+                    <div class="invalid-feedback">
+                      {{ getFieldError("email") }}
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="phone" class="form-label">رقم الهاتف *</label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      class="form-control"
+                      formControlName="phone"
+                      [class.is-invalid]="isFieldInvalid('phone')"
+                      placeholder="+966 5X XXX XXXX"
+                    />
+                    <div class="invalid-feedback">
+                      {{ getFieldError("phone") }}
+                    </div>
+                  </div>
+
+                  <div class="d-flex justify-content-between mt-4">
+                    <a routerLink="/cart" class="btn btn-outline-secondary">
+                      <i class="fas fa-arrow-right me-2"></i>
+                      العودة للسلة
+                    </a>
+                    <button
+                      type="button"
+                      class="btn btn-warning"
+                      (click)="nextStep()"
+                    >
+                      التالي
+                      <i class="fas fa-arrow-left ms-2"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Step 2: Shipping Information -->
+                <div *ngIf="currentStep === 2">
+                  <h3 class="mb-4">معلومات الشحن</h3>
+
+                  <div class="mb-3">
+                    <label for="address" class="form-label">العنوان *</label>
+                    <input
+                      type="text"
+                      id="address"
+                      class="form-control"
+                      formControlName="address"
+                      [class.is-invalid]="isFieldInvalid('address')"
+                      placeholder="أدخل العنوان التفصيلي"
+                    />
+                    <div class="invalid-feedback">
+                      {{ getFieldError("address") }}
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="city" class="form-label">المدينة *</label>
+                      <input
+                        type="text"
+                        id="city"
+                        class="form-control"
+                        formControlName="city"
+                        [class.is-invalid]="isFieldInvalid('city')"
+                        placeholder="أدخل اسم المدينة"
+                      />
+                      <div class="invalid-feedback">
+                        {{ getFieldError("city") }}
+                      </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label for="country" class="form-label">الدولة *</label>
+                      <input
+                        type="text"
+                        id="country"
+                        class="form-control"
+                        formControlName="country"
+                        [class.is-invalid]="isFieldInvalid('country')"
+                        readonly
+                        title="الدولة"
+                        placeholder="أدخل اسم الدولة"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">طريقة الشحن *</label>
+                    <div class="shipping-options">
+                      <div class="row">
+                        <div
+                          class="col-md-6 mb-3"
+                          *ngFor="let option of shippingOptions"
+                        >
+                          <div
+                            class="shipping-option"
+                            [class.selected]="
+                              checkoutForm.get('shippingMethod')?.value ===
+                              option.id"
+                          >
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              [id]="'shipping-' + option.id"
+                              [value]="option.id"
+                              formControlName="shippingMethod"
+                              title="طريقة الشحن"
+                            />
+                            <label
+                              class="form-check-label w-100"
+                              [for]="'shipping-' + option.id"
+                            >
+                              <div
+                                class="d-flex justify-content-between align-items-center"
+                              >
+                                <div>
+                                  <strong>{{ option.name }}</strong>
+                                  <p class="text-muted mb-0 small">
+                                    {{ option.time }}
+                                  </p>
+                                </div>
+                                <div class="shipping-price">
+                                  {{
+                                    option.price === 0
+                                      ? "مجاناً"
+                                      : (option.price
+                                        | currency
+                                          : "SAR"
+                                          : "symbol"
+                                          : "1.0-0")
+                                  }}
+                                </div>
+                              </div>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="d-flex justify-content-between mt-4">
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary"
+                      (click)="prevStep()"
+                    >
+                      <i class="fas fa-arrow-right me-2"></i>
+                      السابق
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-warning"
+                      (click)="nextStep()"
+                    >
+                      التالي
+                      <i class="fas fa-arrow-left ms-2"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Step 3: Payment Information -->
+                <div *ngIf="currentStep === 3">
+                  <h3 class="mb-4">معلومات الدفع</h3>
+
+                  <div class="mb-4">
+                    <label class="form-label">طريقة الدفع *</label>
+                    <div class="payment-methods">
+                      <div class="row">
+                        <div
+                          class="col-md-4 mb-3"
+                          *ngFor="let method of paymentMethods"
+                        >
+                          <div
+                            class="payment-method"
+                            [class.selected]="
+                              checkoutForm.get('paymentMethod')?.value === method.id
+                            "
+                          >
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              [id]="'payment-' + method.id"
+                              [value]="method.id"
+                              formControlName="paymentMethod"
+                              title="طريقة الدفع"
+                            />
+                            <label
+                              class="form-check-label w-100"
+                              [for]="'payment-' + method.id"
+                            >
+                              <div class="d-flex align-items-center">
+                                <i
+                                  [class]="'fas ' + method.icon + ' me-2'"
+                                ></i>
+                                <span>{{ method.name }}</span>
+                              </div>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Credit Card Fields (shown only when credit card is selected) -->
+                  <div
+                    *ngIf="
+                      checkoutForm.get('paymentMethod')?.value === 'credit_card'
+                    "
+                  >
+                    <div class="mb-3">
+                      <label for="cardNumber" class="form-label"
+                        >رقم البطاقة *</label
+                      >
+                      <input
+                        type="text"
+                        id="cardNumber"
+                        class="form-control"
+                        formControlName="cardNumber"
+                        [class.is-invalid]="isFieldInvalid('cardNumber')"
+                        placeholder="XXXX XXXX XXXX XXXX"
+                      />
+                      <div class="invalid-feedback">
+                        {{ getFieldError("cardNumber") }}
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label for="cardExpiry" class="form-label"
+                          >تاريخ الانتهاء *</label
+                        >
+                        <input
+                          type="text"
+                          id="cardExpiry"
+                          class="form-control"
+                          formControlName="cardExpiry"
+                          [class.is-invalid]="isFieldInvalid('cardExpiry')"
+                          placeholder="MM/YY"
+                        />
+                        <div class="invalid-feedback">
+                          {{ getFieldError("cardExpiry") }}
+                        </div>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="cardCvv" class="form-label"
+                          >رمز الأمان (CVV) *</label
+                        >
+                        <input
+                          type="text"
+                          id="cardCvv"
+                          class="form-control"
+                          formControlName="cardCvv"
+                          [class.is-invalid]="isFieldInvalid('cardCvv')"
+                          placeholder="XXX"
+                        />
+                        <div class="invalid-feedback">
+                          {{ getFieldError("cardCvv") }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Bank Transfer Instructions -->
+                  <div
+                    *ngIf="
+                      checkoutForm.get('paymentMethod')?.value ===
+                      'bank_transfer'
+                    "
+                    class="alert alert-info"
+                  >
+                    <h5 class="alert-heading">تعليمات التحويل البنكي</h5>
+                    <p>يرجى تحويل المبلغ إلى الحساب التالي:</p>
+                    <ul>
+                      <li>اسم البنك: بنك الرياض</li>
+                      <li>اسم الحساب: شركة كاتربيلر السعودية</li>
+                      <li>رقم الحساب: SA123456789012345678901</li>
+                      <li>رقم الآيبان: SA123456789012345678901</li>
+                    </ul>
+                    <p class="mb-0">
+                      بعد إتمام التحويل، سيتم معالجة طلبك خلال 24 ساعة.
+                    </p>
+                  </div>
+
+                  <!-- Cash on Delivery Notice -->
+                  <div
+                    *ngIf="
+                      checkoutForm.get('paymentMethod')?.value ===
+                      'cash_on_delivery'
+                    "
+                    class="alert alert-info"
+                  >
+                    <h5 class="alert-heading">الدفع عند الاستلام</h5>
+                    <p>
+                      سيتم تحصيل المبلغ عند توصيل المنتجات إلى العنوان المحدد.
+                    </p>
+                    <p class="mb-0">
+                      يرجى التأكد من توفر المبلغ كاملاً عند الاستلام.
+                    </p>
+                  </div>
+
+                  <div class="d-flex justify-content-between mt-4">
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary"
+                      (click)="prevStep()"
+                    >
+                      <i class="fas fa-arrow-right me-2"></i>
+                      السابق
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-warning"
+                      (click)="submitOrder()"
+                      [disabled]="isSubmitting"
+                    >
+                      <span
+                        *ngIf="isSubmitting"
+                        class="spinner-border spinner-border-sm me-2"
+                      ></span>
+                      {{ isSubmitting ? "جاري إتمام الطلب..." : "إتمام الطلب" }}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-lg-4">
+          <app-checkout-summary
+            [shippingCost]="getShippingCost()"
+            [total]="getTotal()"
+          >
+          </app-checkout-summary>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

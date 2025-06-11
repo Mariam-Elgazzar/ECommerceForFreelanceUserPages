@@ -1,0 +1,720 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "name": "Caterpillar 320 Excavator",
+      "nameAr": "حفارة كاتربيلر 320",
+      "description": "Medium excavator with advanced hydraulic system and fuel efficiency technology.",
+      "descriptionAr": "حفارة متوسطة الحجم مع نظام هيدروليكي متطور وتقنية كفاءة استهلاك الوقود.",
+      "price": 320000,
+      "category": "excavators",
+      "categoryId": 2,
+      "image": "/products/p1.jpg",
+      "stock": 5,
+      "rating": 4.8,
+      "features": [
+        "Fuel Efficient",
+        "Advanced Hydraulics",
+        "Comfortable Cabin"
+      ],
+      "featuresAr": [
+        "كفاءة استهلاك الوقود",
+        "نظام هيدروليكي متطور",
+        "كابينة مريحة"
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Caterpillar D6 Dozer",
+      "nameAr": "جرافة كاتربيلر D6",
+      "description": "Powerful dozer with superior pushing capabilities and precision control.",
+      "descriptionAr": "جرافة قوية مع قدرات دفع متفوقة وتحكم دقيق.",
+      "price": 280000,
+      "category": "bulldozers",
+      "categoryId": 3,
+      "image": "/products/p2.jpg",
+      "stock": 3,
+      "rating": 4.7,
+      "features": [
+        "Powerful Engine",
+        "Precision Control",
+        "Durable Design"
+      ],
+      "featuresAr": [
+        "محرك قوي",
+        "تحكم دقيق",
+        "تصميم متين"
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Caterpillar 950 Wheel Loader",
+      "nameAr": "لودر كاتربيلر 950",
+      "description": "Versatile wheel loader designed for efficiency and productivity in various applications.",
+      "descriptionAr": "لودر متعدد الاستخدامات مصمم للكفاءة والإنتاجية في مختلف التطبيقات.",
+      "price": 250000,
+      "category": "wheel-loaders",
+      "categoryId": 4,
+      "image": "/products/p3.jpg",
+      "stock": 7,
+      "rating": 4.6,
+      "features": [
+        "High Capacity",
+        "Fuel Efficient",
+        "Easy Maintenance"
+      ],
+      "featuresAr": [
+        "سعة عالية",
+        "كفاءة استهلاك الوقود",
+        "صيانة سهلة"
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Caterpillar 730 Articulated Truck",
+      "nameAr": "شاحنة كاتربيلر 730 المفصلية",
+      "description": "Heavy-duty articulated truck for efficient material transport in challenging conditions.",
+      "descriptionAr": "شاحنة مفصلية للأعمال الشاقة لنقل المواد بكفاءة في الظروف الصعبة.",
+      "price": 350000,
+      "category": "dump-trucks",
+      "categoryId": 5,
+      "image": "/products/p4.jpg",
+      "stock": 4,
+      "rating": 4.9,
+      "features": [
+        "High Payload",
+        "All-Terrain Capability",
+        "Operator Comfort"
+      ],
+      "featuresAr": [
+        "حمولة عالية",
+        "قدرة على جميع التضاريس",
+        "راحة المشغل"
+      ]
+    },
+    {
+      "id": "5",
+      "name": "Caterpillar Engine C15",
+      "nameAr": "محرك كاتربيلر C15",
+      "description": "Powerful and reliable engine for industrial and marine applications.",
+      "descriptionAr": "محرك قوي وموثوق للتطبيقات الصناعية والبحرية.",
+      "price": 45000,
+      "category": "parts-accessories",
+      "categoryId": 6,
+      "image": "/products/p5.jpg",
+      "stock": 12,
+      "rating": 4.8,
+      "features": [
+        "High Power Output",
+        "Fuel Efficient",
+        "Durable Design"
+      ],
+      "featuresAr": [
+        "قدرة عالية",
+        "كفاءة استهلاك الوقود",
+        "تصميم متين"
+      ]
+    },
+    {
+      "id": "6",
+      "name": "Caterpillar 336 Excavator",
+      "nameAr": "حفارة كاتربيلر 336",
+      "description": "Large excavator with advanced technology for maximum productivity.",
+      "descriptionAr": "حفارة كبيرة مع تكنولوجيا متقدمة لأقصى إنتاجية.",
+      "price": 420000,
+      "category": "excavators",
+      "categoryId": 2,
+      "image": "/products/p6.jpg",
+      "stock": 2,
+      "rating": 4.9,
+      "features": [
+        "High Performance",
+        "Advanced Technology",
+        "Fuel Efficient"
+      ],
+      "featuresAr": [
+        "أداء عالي",
+        "تكنولوجيا متقدمة",
+        "كفاءة استهلاك الوقود"
+      ]
+    },
+    {
+      "id": "7",
+      "name": "Caterpillar D8 Dozer",
+      "nameAr": "جرافة كاتربيلر D8",
+      "description": "Heavy-duty dozer for the toughest applications with superior pushing power.",
+      "descriptionAr": "جرافة للأعمال الشاقة للتطبيقات الأكثر صعوبة مع قوة دفع متفوقة.",
+      "price": 380000,
+      "category": "bulldozers",
+      "categoryId": 3,
+      "image": "/products/p7.jpg",
+      "stock": 3,
+      "rating": 4.7,
+      "features": [
+        "Extreme Power",
+        "Durable Design",
+        "Advanced Controls"
+      ],
+      "featuresAr": [
+        "قوة هائلة",
+        "تصميم متين",
+        "أدوات تحكم متقدمة"
+      ]
+    },
+    {
+      "id": "8",
+      "name": "Caterpillar 980 Wheel Loader",
+      "nameAr": "لودر كاتربيلر 980",
+      "description": "Large wheel loader designed for high production applications.",
+      "descriptionAr": "لودر كبير مصمم لتطبيقات الإنتاج العالي.",
+      "price": 320000,
+      "category": "wheel-loaders",
+      "categoryId": 4,
+      "image": "/products/p8.jpg",
+      "stock": 4,
+      "rating": 4.8,
+      "features": [
+        "High Capacity",
+        "Powerful Engine",
+        "Operator Comfort"
+      ],
+      "featuresAr": [
+        "سعة عالية",
+        "محرك قوي",
+        "راحة المشغل"
+      ]
+    },
+    {
+      "id": "9",
+      "name": "Caterpillar 349 Excavator",
+      "nameAr": "حفارة كاتربيلر 349",
+      "description": "Heavy-duty excavator for large-scale construction projects.",
+      "descriptionAr": "حفارة للأعمال الشاقة لمشاريع البناء الكبيرة.",
+      "price": 450000,
+      "category": "excavators",
+      "categoryId": 2,
+      "image": "/products/p9.jpg",
+      "stock": 1,
+      "rating": 4.9,
+      "features": [
+        "High Digging Power",
+        "Advanced Hydraulics",
+        "Operator Safety"
+      ],
+      "featuresAr": [
+        "قوة حفر عالية",
+        "نظام هيدروليكي متطور",
+        "سلامة المشغل"
+      ]
+    },
+    {
+      "id": "10",
+      "name": "Caterpillar 745 Articulated Truck",
+      "nameAr": "شاحنة كاتربيلر 745 المفصلية",
+      "description": "High-capacity truck for heavy material transport.",
+      "descriptionAr": "شاحنة عالية السعة لنقل المواد الثقيلة.",
+      "price": 400000,
+      "category": "dump-trucks",
+      "categoryId": 5,
+      "image": "/products/p10.jpg",
+      "stock": 3,
+      "rating": 4.8,
+      "features": [
+        "Large Payload",
+        "Durable Frame",
+        "Fuel Efficient"
+      ],
+      "featuresAr": [
+        "حمولة كبيرة",
+        "إطار متين",
+        "كفاءة استهلاك الوقود"
+      ]
+    },
+    {
+      "id": "11",
+      "name": "Caterpillar Hydraulic Pump",
+      "nameAr": "مضخة هيدروليكية كاتربيلر",
+      "description": "High-performance hydraulic pump for various machinery.",
+      "descriptionAr": "مضخة هيدروليكية عالية الأداء لمختلف الآلات.",
+      "price": 15000,
+      "category": "parts-accessories",
+      "categoryId": 6,
+      "image": "/products/p11.jpg",
+      "stock": 20,
+      "rating": 4.7,
+      "features": [
+        "High Pressure",
+        "Long Lifespan",
+        "Easy Installation"
+      ],
+      "featuresAr": [
+        "ضغط عالي",
+        "عمر طويل",
+        "تركيب سهل"
+      ]
+    },
+    {
+      "id": "12",
+      "name": "Caterpillar 966 Wheel Loader",
+      "nameAr": "لودر كاتربيلر 966",
+      "description": "Mid-size wheel loader for versatile applications.",
+      "descriptionAr": "لودر متوسط الحجم لتطبيقات متعددة الاستخدامات.",
+      "price": 300000,
+      "category": "wheel-loaders",
+      "categoryId": 4,
+      "image": "/products/p12.jpg",
+      "stock": 5,
+      "rating": 4.6,
+      "features": [
+        "Versatile Design",
+        "Fuel Efficient",
+        "Operator Comfort"
+      ],
+      "featuresAr": [
+        "تصميم متعدد الاستخدامات",
+        "كفاءة استهلاك الوقود",
+        "راحة المشغل"
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "id": "1",
+      "name": "Heavy Machinery",
+      "nameAr": "المعدات الثقيلة",
+      "description": "Construction and mining equipment",
+      "descriptionAr": "معدات البناء والتعدين",
+      "image": "/categories/c1.jpg",
+      "productCount": 30,
+      "slug": "heavy-machinery"
+    },
+    {
+      "id": "2",
+      "name": "Excavators",
+      "nameAr": "الحفارات",
+      "description": "Various types of excavators",
+      "descriptionAr": "أنواع مختلفة من الحفارات",
+      "image": "/categories/c2.jpg",
+      "productCount": 20,
+      "slug": "excavators"
+    },
+    {
+      "id": "3",
+      "name": "Bulldozers",
+      "nameAr": "الجرافات",
+      "description": "Heavy-duty bulldozers",
+      "descriptionAr": "جرافات للأعمال الشاقة",
+      "image": "/categories/c3.jpg",
+      "productCount": 15,
+      "slug": "bulldozers"
+    },
+    {
+      "id": "4",
+      "name": "Wheel Loaders",
+      "nameAr": "اللوادر",
+      "description": "Efficient wheel loaders",
+      "descriptionAr": "لوادر عجلات فعالة",
+      "image": "/categories/c4.jpg",
+      "productCount": 18,
+      "slug": "wheel-loaders"
+    },
+    {
+      "id": "5",
+      "name": "Dump Trucks",
+      "nameAr": "شاحنات القلاب",
+      "description": "Heavy-duty dump trucks",
+      "descriptionAr": "شاحنات قلاب للأعمال الشاقة",
+      "image": "/categories/c5.jpg",
+      "productCount": 12,
+      "slug": "dump-trucks"
+    },
+    {
+      "id": "6",
+      "name": "Parts & Accessories",
+      "nameAr": "قطع الغيار والإكسسوارات",
+      "description": "Original parts and accessories",
+      "descriptionAr": "قطع غيار وإكسسوارات أصلية",
+      "image": "/categories/c6.jpg",
+      "productCount": 55,
+      "slug": "parts-accessories"
+    },
+    {
+      "id": "7",
+      "name": "Cranes",
+      "nameAr": "الرافعات",
+      "description": "Heavy-duty cranes for lifting and construction",
+      "descriptionAr": "رافعات للأعمال الشاقة للرفع والبناء",
+      "image": "/categories/c7.jpg",
+      "productCount": 8,
+      "slug": "cranes"
+    },
+    {
+      "id": "8",
+      "name": "Graders",
+      "nameAr": "الجريدرات",
+      "description": "Motor graders for road construction and maintenance",
+      "descriptionAr": "جريدرات لتسوية الطرق وصيانتها",
+      "image": "/categories/c8.jpg",
+      "productCount": 10,
+      "slug": "graders"
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "name": "أحمد محمد السعيد",
+      "email": "ahmed@example.com",
+      "phone": "+966 50 123 4567",
+      "address": "شارع الملك فهد، الرياض",
+      "city": "الرياض",
+      "country": "المملكة العربية السعودية",
+      "avatar": "/users/u1.jpg",
+      "joinDate": "2023-01-15"
+    }
+  ],
+  "orders": [
+    {
+      "id": "ORD-001",
+      "userId": 1,
+      "date": "2024-01-15",
+      "status": "مكتمل",
+      "total": 320000,
+      "items": [
+        {
+          "productId": "1",
+          "quantity": 1,
+          "price": 320000
+        }
+      ],
+      "shipping": {
+        "address": "شارع الملك فهد، الرياض",
+        "city": "الرياض",
+        "country": "المملكة العربية السعودية",
+        "method": "standard",
+        "cost": 0
+      },
+      "payment": {
+        "method": "credit_card",
+        "cardLast4": "1234"
+      }
+    },
+    {
+      "id": "ORD-002",
+      "userId": 1,
+      "date": "2024-01-10",
+      "status": "قيد التنفيذ",
+      "total": 45500,
+      "items": [
+        {
+          "productId": "5",
+          "quantity": 1,
+          "price": 45000
+        }
+      ],
+      "shipping": {
+        "address": "شارع الملك فهد، الرياض",
+        "city": "الرياض",
+        "country": "المملكة العربية السعودية",
+        "method": "express",
+        "cost": 500
+      },
+      "payment": {
+        "method": "bank_transfer",
+        "reference": "TRF12345"
+      }
+    },
+    {
+      "id": "ORD-003",
+      "userId": 1,
+      "date": "2025-06-03T06:51:02.306Z",
+      "status": "قيد المعالجة",
+      "total": 280000,
+      "items": [
+        {
+          "productId": "2",
+          "quantity": 1,
+          "price": 280000
+        }
+      ],
+      "shipping": {
+        "address": "شارع الملك فهد، الرياض",
+        "city": "الرياض",
+        "country": "المملكة العربية السعودية",
+        "method": "standard",
+        "cost": 0
+      },
+      "payment": {
+        "method": "credit_card",
+        "cardLast4": "5678"
+      }
+    },
+    {
+      "id": "ORD-004",
+      "userId": 1,
+      "date": "2024-12-20",
+      "status": "مكتمل",
+      "total": 450000,
+      "items": [
+        {
+          "productId": "9",
+          "quantity": 1,
+          "price": 450000
+        }
+      ],
+      "shipping": {
+        "address": "شارع الملك فهد، الرياض",
+        "city": "الرياض",
+        "country": "المملكة العربية السعودية",
+        "method": "standard",
+        "cost": 0
+      },
+      "payment": {
+        "method": "credit_card",
+        "cardLast4": "9012"
+      }
+    },
+    {
+      "id": "ORD-005",
+      "userId": 1,
+      "date": "2025-01-05",
+      "status": "قيد الشحن",
+      "total": 15500,
+      "items": [
+        {
+          "productId": "11",
+          "quantity": 1,
+          "price": 15000
+        }
+      ],
+      "shipping": {
+        "address": "شارع الملك فهد، الرياض",
+        "city": "الرياض",
+        "country": "المملكة العربية السعودية",
+        "method": "express",
+        "cost": 500
+      },
+      "payment": {
+        "method": "bank_transfer",
+        "reference": "TRF67890"
+      }
+    },
+    {
+      "id": "2b9f",
+      "userId": 1,
+      "date": "2025-06-03T08:29:36.346Z",
+      "status": "قيد المعالجة",
+      "total": 600050,
+      "items": [
+        {
+          "productId": "2",
+          "quantity": 1,
+          "price": 280000
+        },
+        {
+          "productId": "1",
+          "quantity": 1,
+          "price": 320000
+        }
+      ],
+      "shipping": {
+        "address": "Sobek El Ahad - Ashmoun - Elmenofia - Egypt",
+        "city": "Elmenufia",
+        "country": "المملكة العربية السعودية",
+        "method": "express",
+        "cost": 50
+      },
+      "payment": {
+        "method": "credit_card",
+        "cardLast4": "ىءىء"
+      }
+    },
+    {
+      "id": "a25e",
+      "userId": 1,
+      "date": "2025-06-03T23:10:42.534Z",
+      "status": "قيد المعالجة",
+      "total": 600000,
+      "items": [
+        {
+          "productId": "1",
+          "quantity": 1,
+          "price": 320000
+        },
+        {
+          "productId": "2",
+          "quantity": 1,
+          "price": 280000
+        }
+      ],
+      "shipping": {
+        "address": "Sobek El Ahad - Ashmoun - Elmenofia - Egypt",
+        "city": "Elmenufia",
+        "country": "المملكة العربية السعودية",
+        "method": "standard",
+        "cost": 0
+      },
+      "payment": {
+        "method": "credit_card",
+        "cardLast4": "qefe"
+      }
+    },
+    {
+      "id": "7b6b",
+      "userId": 1,
+      "date": "2025-06-04T08:51:03.028Z",
+      "status": "قيد المعالجة",
+      "total": 600000,
+      "items": [
+        {
+          "productId": "1",
+          "quantity": 1,
+          "price": 320000
+        },
+        {
+          "productId": "2",
+          "quantity": 1,
+          "price": 280000
+        }
+      ],
+      "shipping": {
+        "address": "Sobek El Ahad - Ashmoun - Elmenofia - Egypt",
+        "city": "Elmenufia",
+        "country": "المملكة العربية السعودية",
+        "method": "standard",
+        "cost": 0
+      },
+      "payment": {
+        "method": "cash_on_delivery"
+      }
+    },
+    {
+      "id": "4973",
+      "userId": 1,
+      "date": "2025-06-04T08:53:15.724Z",
+      "status": "قيد المعالجة",
+      "total": 850000,
+      "items": [
+        {
+          "productId": "9",
+          "quantity": 1,
+          "price": 450000
+        },
+        {
+          "productId": "10",
+          "quantity": 1,
+          "price": 400000
+        }
+      ],
+      "shipping": {
+        "address": "sadgadgdagg",
+        "city": "ggsgs",
+        "country": "المملكة العربية السعودية",
+        "method": "standard",
+        "cost": 0
+      },
+      "payment": {
+        "method": "cash_on_delivery"
+      }
+    },
+    {
+      "id": "76fe",
+      "userId": 1,
+      "date": "2025-06-10T21:41:54.075Z",
+      "status": "قيد المعالجة",
+      "total": 850000,
+      "items": [
+        {
+          "productId": "1",
+          "quantity": 1,
+          "price": 320000
+        },
+        {
+          "productId": "2",
+          "quantity": 1,
+          "price": 280000
+        },
+        {
+          "productId": "3",
+          "quantity": 1,
+          "price": 250000
+        }
+      ],
+      "shipping": {
+        "address": "Sobek El Ahad - Ashmoun - Elmenofia - Egypt",
+        "city": "Elmenufia",
+        "country": "المملكة العربية السعودية",
+        "method": "standard",
+        "cost": 0
+      },
+      "payment": {
+        "method": "cash_on_delivery"
+      }
+    }
+  ],
+  "faqs": [
+    {
+      "id": "1",
+      "question": "How long does shipping take?",
+      "questionAr": "كم يستغرق وقت الشحن؟",
+      "answer": "Shipping typically takes 3-7 business days within Saudi Arabia.",
+      "answerAr": "عادة ما يستغرق الشحن من 3-7 أيام عمل داخل المملكة العربية السعودية.",
+      "category": "shipping"
+    },
+    {
+      "id": "2",
+      "question": "What is the warranty period?",
+      "questionAr": "ما هي مدة الضمان؟",
+      "answer": "All our products come with a 1-year manufacturer warranty.",
+      "answerAr": "جميع منتجاتنا تأتي مع ضمان الشركة المصنعة لمدة سنة واحدة.",
+      "category": "warranty"
+    },
+    {
+      "id": "3",
+      "question": "Do you offer financing options?",
+      "questionAr": "هل تقدمون خيارات التمويل؟",
+      "answer": "Yes, we offer various financing options for qualified customers.",
+      "answerAr": "نعم، نقدم خيارات تمويل متنوعة للعملاء المؤهلين.",
+      "category": "payment"
+    },
+    {
+      "id": "4",
+      "question": "How can I track my order?",
+      "questionAr": "كيف يمكنني تتبع طلبي؟",
+      "answer": "You can track your order using the tracking number sent to your email.",
+      "answerAr": "يمكنك تتبع طلبك باستخدام رقم التتبع المرسل إلى بريدك الإلكتروني.",
+      "category": "shipping"
+    },
+    {
+      "id": "5",
+      "question": "Are the products genuine Caterpillar?",
+      "questionAr": "هل المنتجات أصلية من كاتربيلر؟",
+      "answer": "Yes, all our products are genuine Caterpillar equipment and parts.",
+      "answerAr": "نعم، جميع منتجاتنا معدات وقطع غيار أصلية من كاتربيلر.",
+      "category": "products"
+    },
+    {
+      "id": "6",
+      "question": "What payment methods do you accept?",
+      "questionAr": "ما هي طرق الدفع التي تقبلونها؟",
+      "answer": "We accept credit cards, bank transfers, and cash on delivery.",
+      "answerAr": "نقبل بطاقات الائتمان والتحويلات البنكية والدفع عند الاستلام.",
+      "category": "payment"
+    },
+    {
+      "id": "7",
+      "question": "Can I return a product?",
+      "questionAr": "هل يمكنني إرجاع منتج؟",
+      "answer": "Yes, returns are accepted within 30 days if the product is unused and in original condition.",
+      "answerAr": "نعم، يمكن إرجاع المنتجات خلال 30 يومًا إذا كانت غير مستخدمة وبحالتها الأصلية.",
+      "category": "returns"
+    },
+    {
+      "id": "8",
+      "question": "Do you provide maintenance services?",
+      "questionAr": "هل تقدمون خدمات الصيانة؟",
+      "answer": "Yes, we offer maintenance services for all Caterpillar equipment.",
+      "answerAr": "نعم، نقدم خدمات الصيانة لجميع معدات كاتربيلر.",
+      "category": "services"
+    }
+  ]
+}

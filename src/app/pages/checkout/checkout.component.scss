@@ -1,0 +1,136 @@
+.checkout-steps {
+  margin-bottom: 2rem;
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding: 1rem;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 2.5rem;
+      left: -50%;
+      width: 100%;
+      height: 2px;
+      background-color: #e9ecef;
+      z-index: -1;
+    }
+
+    &:first-child::after {
+      display: none;
+    }
+
+    .step-number {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      background-color: #e9ecef;
+      color: #6c757d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .step-title {
+      font-size: 0.9rem;
+      color: #6c757d;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    &.active {
+      .step-number {
+        background-color: #ffc107;
+        color: #000;
+      }
+
+      .step-title {
+        color: #000;
+        font-weight: 600;
+      }
+    }
+
+    &.completed {
+      .step-number {
+        background-color: #28a745;
+        color: #fff;
+      }
+
+      &::after {
+        background-color: #28a745;
+      }
+    }
+  }
+}
+
+.shipping-options, .payment-methods {
+  .shipping-option, .payment-method {
+    border: 2px solid #e9ecef;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: #ffc107;
+    }
+
+    &.selected {
+      border-color: #ffc107;
+      background-color: rgba(255, 193, 7, 0.1);
+    }
+
+    .form-check {
+      margin: 0;
+      padding: 0;
+
+      .form-check-input {
+        margin-top: 0.3rem;
+      }
+
+      .form-check-label {
+        cursor: pointer;
+        padding-right: 1.5rem;
+      }
+    }
+
+    .shipping-price {
+      font-weight: bold;
+    }
+  }
+}
+
+.alert {
+  border-radius: 0.5rem;
+
+  .alert-heading {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .checkout-steps {
+    .step {
+      &::after {
+        top: 1.75rem;
+      }
+
+      .step-number {
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.9rem;
+      }
+
+      .step-title {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
