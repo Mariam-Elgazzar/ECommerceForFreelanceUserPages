@@ -3,8 +3,13 @@
   <div class="container">
     <div class="row align-items-center">
       <div class="col-lg-6">
-        <h1 class="display-4 fw-bold mb-4 fade-in">قطع غيار ومكونات كاتربيلر الأصلية</h1>
-        <p class="lead mb-4 fade-in">حافظ على معداتك من كاتربيلر تعمل بأقصى أداء مع القطع الأصلية والدعم المتخصص.</p>
+        <h1 class="display-4 fw-bold mb-4 fade-in">
+          قطع غيار ومكونات كاتربيلر الأصلية
+        </h1>
+        <p class="lead mb-4 fade-in">
+          حافظ على معداتك من كاتربيلر تعمل بأقصى أداء مع القطع الأصلية والدعم
+          المتخصص.
+        </p>
         <div class="fade-in">
           <a routerLink="/products" class="btn btn-primary btn-lg me-3">
             تسوق القطع الآن
@@ -16,9 +21,11 @@
         </div>
       </div>
       <div class="col-lg-6">
-        <img src="/products/p3.jpg"
-             alt="معدات كاتربيلر"
-             class="img-fluid rounded shadow-lg slide-in-right">
+        <img
+          src="/products/p3.jpg"
+          alt="معدات كاتربيلر"
+          class="img-fluid rounded shadow-lg slide-in-right"
+        />
       </div>
     </div>
   </div>
@@ -30,9 +37,11 @@
     <div class="row justify-content-center">
       <div class="col-lg-8">
         <div class="input-group input-group-lg">
-          <input type="text"
-                 class="form-control text-end"
-                 placeholder="ابحث برقم القطعة أو الوصف أو موديل الآلة...">
+          <input
+            type="text"
+            class="form-control text-end"
+            placeholder="ابحث برقم القطعة أو الوصف أو موديل الآلة..."
+          />
           <button class="btn btn-primary" type="button">
             <i class="bi bi-search"></i>
             بحث
@@ -50,31 +59,35 @@
   </div>
 </div>
 
-<!-- Error State -->
-<div *ngIf="error" class="error-message">
+<!-- errorMessage State -->
+<div *ngIf="errorMessage" class="errorMessage-message">
   <div class="alert alert-danger" role="alert">
     <i class="bi bi-exclamation-triangle"></i>
-    {{ error }}
+    {{ errorMessage }}
   </div>
 </div>
 
 <!-- Categories Section -->
-<section class="py-5" *ngIf="!loading && !error">
+<section class="py-5" *ngIf="!loading && !errorMessage">
   <div class="container">
     <h2 class="text-center mb-5 fw-bold">تسوق حسب الفئة</h2>
     <div class="row g-4">
       <div class="col-md-4" *ngFor="let category of categories">
         <div class="card category-card h-100 border-0 shadow-sm">
-          <img [src]="category.image"
-               alt="{{category.name}}"
-               class="card-img-top category-img">
+          <img
+            [src]="category.imageURL"
+            alt="{{ category.name }}"
+            class="card-img-top category-img"
+          />
           <div class="card-body text-center">
             <h5 class="card-title">{{ category.name }}</h5>
             <p class="card-text text-muted">{{ category.description }}</p>
-            <p class="text-primary fw-bold">{{ category.productCount }} قطعة</p>
-            <a [routerLink]="['/products']"
-               [queryParams]="{category: category.name}"
-               class="btn btn-primary">
+            <!-- <p class="text-primary fw-bold">{{ category. }} قطعة</p> -->
+            <a
+              [routerLink]="['/products']"
+              [queryParams]="{ id: category.id }"
+              class="btn btn-primary"
+            >
               تصفح {{ category.name }}
             </a>
           </div>
@@ -85,7 +98,7 @@
 </section>
 
 <!-- Featured Products Section -->
-<section class="py-5 bg-light" *ngIf="!loading && !error">
+<section class="py-5 bg-light" *ngIf="!loading && !errorMessage">
   <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-5">
       <h2 class="fw-bold">القطع المميزة</h2>
@@ -99,40 +112,45 @@
       <div class="col-lg-3 col-md-6" *ngFor="let product of featuredProducts">
         <div class="card product-card h-100 border-0">
           <div class="position-relative">
-            <img [src]="product.image[0]"
-                 alt="{{product.name}}"
-                 class="card-img-top product-image">
-            <span *ngIf="product.stock <= 0"
-                  class="badge bg-danger position-absolute top-0 start-0 m-2">
-              غير متوفر
+            <img
+              [src]="product.mainImageURL"
+              alt="{{ product.name }}"
+              class="card-img-top product-image"
+            />
+            <span
+              *ngIf="product.status === 'الايجار' ? 'البيع' : ' والبيع الايجار'"
+              class="badge bg-danger position-absolute top-0 start-0 m-2"
+            >
+              {{ product.status }}
             </span>
           </div>
 
           <div class="card-body">
-            <small class="text-muted">{{ product.category }}</small>
+            <small class="text-muted">{{ product.categoryName }}</small>
             <h6 class="card-title">{{ product.name }}</h6>
             <!-- <p class="text-muted small">رقم القطعة: {{ product.partNumber }}</p> -->
 
-            <div class="d-flex align-items-center mb-2">
+            <!-- <div class="d-flex align-items-center mb-2">
               <div class="rating-stars me-2">
                 <i class="bi bi-star-fill" *ngFor="let star of getStarArray(product.rating)"></i>
-              </div>
-              <!-- <small class="text-muted">{{ product.rating }} ({{ product.reviews }} تقييم)</small> -->
-            </div>
+              </div> -->
+            <!-- <small class="text-muted">{{ product.rating }} ({{ product.reviews }} تقييم)</small>
+            </div> -->
 
             <div class="d-flex justify-content-between align-items-center">
-              <span class="h5 mb-0 text-primary">${{ product.price }}</span>
+              <!-- <span class="h5 mb-0 text-primary">${{ product. }}</span> -->
               <div>
-                <a [routerLink]="['/products', product.id]"
-                   class="btn btn-sm btn-outline-primary me-2">
+                <a
+                  [routerLink]="['/products', product.id]"
+                  class="btn btn-sm btn-outline-primary me-2"
+                >
                   عرض
                 </a>
-                <button class="btn btn-sm btn-primary"
-                        [disabled]="product.stock <= 0"
-                        (click)="addToCart(product)"
-                        title="أضف إلى السلة">
+                <button class="btn btn-sm btn-primary" title="product.status ">
                   <i class="bi bi-cart-plus"></i>
                 </button>
+                <!-- [disabled]="product.stock <= 0" -->
+                <!-- (click)="addToCart(product)" -->
               </div>
             </div>
           </div>
@@ -147,30 +165,42 @@
   <div class="container">
     <div class="row g-4">
       <div class="col-md-4 text-center">
-        <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-             style="width: 80px; height: 80px;">
+        <div
+          class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+          style="width: 80px; height: 80px"
+        >
           <i class="bi bi-truck text-dark fs-2"></i>
         </div>
         <h5>شحن سريع</h5>
-        <p class="text-muted">احصل على قطعك بسرعة مع خيارات الشحن المعجل لدينا.</p>
+        <p class="text-muted">
+          احصل على قطعك بسرعة مع خيارات الشحن المعجل لدينا.
+        </p>
       </div>
 
       <div class="col-md-4 text-center">
-        <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-             style="width: 80px; height: 80px;">
+        <div
+          class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+          style="width: 80px; height: 80px"
+        >
           <i class="bi bi-check-circle text-dark fs-2"></i>
         </div>
         <h5>قطع أصلية</h5>
-        <p class="text-muted">جميع القطع هي مكونات كاتربيلر الأصلية مع ضمان كامل.</p>
+        <p class="text-muted">
+          جميع القطع هي مكونات كاتربيلر الأصلية مع ضمان كامل.
+        </p>
       </div>
 
       <div class="col-md-4 text-center">
-        <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-             style="width: 80px; height: 80px;">
+        <div
+          class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+          style="width: 80px; height: 80px"
+        >
           <i class="bi bi-tools text-dark fs-2"></i>
         </div>
         <h5>دعم متخصص</h5>
-        <p class="text-muted">خبراؤنا التقنيون هنا لمساعدتك في العثور على القطع المناسبة.</p>
+        <p class="text-muted">
+          خبراؤنا التقنيون هنا لمساعدتك في العثور على القطع المناسبة.
+        </p>
       </div>
     </div>
   </div>

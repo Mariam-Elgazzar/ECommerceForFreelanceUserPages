@@ -1,33 +1,144 @@
-<div class="container-fluid py-4" *ngIf="!loading && product">
+<div class="container-fluid py-4" *ngIf="product">
   <!-- Breadcrumb -->
   <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a routerLink="/">الرئيسية</a></li>
       <li class="breadcrumb-item"><a routerLink="/products">المنتجات</a></li>
-      <li class="breadcrumb-item active">{{ product.nameAr }}</li>
+      <li class="breadcrumb-item active" aria-current="page">
+        {{ product.name }}
+      </li>
     </ol>
   </nav>
 
   <!-- Product Details -->
   <div class="row">
-    <!-- Product Images -->
+    <!-- Product Media -->
     <div class="col-lg-6 mb-4">
-      <div class="product-images">
-        <div class="main-image mb-3">
-          <img
-            [src]="productImages[selectedImageIndex]"
-            alt="{{product.nameAr}}"
-            class="img-fluid rounded">
+      <div class="product-media card shadow-sm">
+        <!-- Main Media Display -->
+        <div class="main-media mb-3">
+          <ng-container
+            *ngIf="
+              selectedMediaIndex === -1 ||
+              getAllMedia()[selectedMediaIndex]?.mediaType === 'image'
+            "
+          >
+            <img
+              [src]="
+                selectedMediaIndex === -1
+                  ? product.mainImageURL || 'p1.png'
+                  : getAllMedia()[selectedMediaIndex]?.mediaURL ||
+                    product.mainImageURL ||
+                    'p1.png'
+              "
+              alt="{{ product.name }}"
+              class="img-fluid rounded media-image"
+              (click)="
+                openImageZoom(
+                  selectedMediaIndex === -1
+                    ? product.mainImageURL
+                    : getAllMedia()[selectedMediaIndex]?.mediaURL
+                )
+              "
+              (error)="onImageError($event)"
+              role="button"
+              aria-label="تكبير الصورة"
+            />
+          </ng-container>
+          <ng-container
+            *ngIf="
+              selectedMediaIndex !== -1 &&
+              getAllMedia()[selectedMediaIndex]?.mediaType === 'video'
+            "
+          >
+            <video
+              [src]="getAllMedia()[selectedMediaIndex]?.mediaURL"
+              controls
+              class="img-fluid rounded media-video"
+              aria-label="تشغيل الفيديو"
+              autoplay
+              muted
+            ></video>
+          </ng-container>
         </div>
-        <div class="thumbnail-images">
+
+        <!-- Media Thumbnails -->
+        <div
+          class="thumbnail-media"
+          *ngIf="getAllMedia().length > 0 || product.mainImageURL"
+        >
           <div class="row g-2">
-            <div class="col-4" *ngFor="let image of productImages; let i = index">
-              <img
-                [src]="image"
-                alt="{{product.nameAr}}"
-                class="img-fluid rounded thumbnail"
-                [class.active]="selectedImageIndex === i"
-                (click)="selectImage(i)">
+            <!-- Main Image Thumbnail -->
+            <div class="col-3" *ngIf="product.mainImageURL">
+              <div class="thumbnail-wrapper">
+                <img
+                  [src]="product.mainImageURL"
+                  alt="{{ product.name }}"
+                  class="img-fluid rounded thumbnail"
+                  [class.active]="selectedMediaIndex === -1"
+                  (click)="selectMedia(-1)"
+                  (error)="onImageError($event)"
+                  role="button"
+                  aria-label="تحديد الصورة الرئيسية"
+                />
+              </div>
+            </div>
+            <!-- Other Media Thumbnails -->
+            <div
+              class="col-3"
+              *ngFor="let media of getAllMedia(); let i = index"
+            >
+              <div
+                class="thumbnail-wrapper"
+                [class.video-thumbnail]="media.mediaType === 'video'"
+              >
+                <ng-container *ngIf="media.mediaType === 'image'">
+                  <img
+                    [src]="
+                      media.imageThumbnailURL || media.mediaURL || 'p1.png'
+                    "
+                    alt="{{ product.name }}"
+                    class="img-fluid rounded thumbnail"
+                    [class.active]="selectedMediaIndex === i"
+                    (click)="selectMedia(i)"
+                    (error)="onImageError($event)"
+                    role="button"
+                    aria-label="تحديد الصورة"
+                  />
+                </ng-container>
+                <ng-container *ngIf="media.mediaType === 'video'">
+                  <video
+                    [src]="media.mediaURL"
+                    class="img-fluid rounded thumbnail"
+                    [class.active]="selectedMediaIndex === i"
+                    (click)="selectMedia(i)"
+                    muted
+                    aria-label="تحديد الفيديو"
+                  ></video>
+                  <div class="play-button">
+                    <i class="fas fa-play"></i>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PDF Documents -->
+        <div class="pdf-documents mt-4" *ngIf="getPdfs().length > 0">
+          <h5 class="card-title mb-3">مستندات المنتج</h5>
+          <div class="row g-3">
+            <div class="col-md-6" *ngFor="let pdf of getPdfs(); let i = index">
+              <a
+                [href]="getPdfUrl(pdf.mediaURL)"
+                target="_blank"
+                class="pdf-card card h-100 text-decoration-none"
+              >
+                <div class="card-body text-center">
+                  <i class="fas fa-file-pdf fa-2x text-danger mb-2"></i>
+                  <p class="card-text text-muted mb-0">مستند {{ i + 1 }}</p>
+                </div>
+              </a>
             </div>
           </div>
         </div>
@@ -36,73 +147,93 @@
 
     <!-- Product Info -->
     <div class="col-lg-6">
-      <div class="product-info">
-        <h1 class="product-title mb-3">{{ product.nameAr }}</h1>
+      <div class="product-info card shadow-sm p-4">
+        <h1 class="product-title mb-3">{{ product.name }}</h1>
         <div class="product-meta mb-3">
-          <span class="badge bg-secondary me-2">{{ product.category }}</span>
+          <span class="badge bg-secondary me-2">{{
+            product.categoryName || "غير محدد"
+          }}</span>
           <span class="text-muted">رقم المنتج: #{{ product.id }}</span>
         </div>
-
-        <div class="product-price mb-4">
-          <span class="h2 text-warning">{{ product.price | currency:'SAR':'symbol':'1.2-2' }}</span>
+        <div class="product-brand-model mb-3">
+          <p class="mb-1">
+            <strong>العلامة التجارية:</strong> {{ product.brand || "غير محدد" }}
+          </p>
+          <p class="mb-1">
+            <strong>الموديل:</strong> {{ product.model || "غير محدد" }}
+          </p>
         </div>
 
         <div class="product-description mb-4">
           <h5>وصف المنتج</h5>
-          <p class="text-muted">{{ product.descriptionAr }}</p>
+          <p class="text-muted">
+            {{ product.description || "لا يوجد وصف متاح" }}
+          </p>
         </div>
 
-        <!-- Quantity and Add to Cart -->
+        <!--  -->
         <div class="product-actions">
-          <div class="quantity-selector mb-3">
-            <label class="form-label">الكمية:</label>
-            <div class="input-group quantity-width">
-              <button
-                class="btn btn-outline-secondary"
-                type="button"
-                (click)="decreaseQuantity()">
-                -
-              </button>
-              <input
-                type="number"
-                class="form-control text-center"
-                [(ngModel)]="quantity"
-                min="1"
-                placeholder="أدخل الكمية"
-                title="أدخل الكمية">
-              <button
-                class="btn btn-outline-secondary"
-                type="button"
-                (click)="increaseQuantity()">
-                +
-              </button>
-            </div>
-          </div>
-
-          <div class="d-grid gap-2 d-md-flex">
+          <div class="d-grid gap-2 d-md-flex" *ngIf="product.status === 'شراء'">
             <button
               class="btn btn-warning btn-lg flex-fill"
-              (click)="addToCart()">
-              <i class="fas fa-shopping-cart me-2"></i>
-              إضافة للسلة
+              aria-label="إضافة إلى السلة"
+            >
+              <i class="fas fa-store"></i>
+              شراء
             </button>
-            <button class="btn btn-outline-danger btn-lg" title="إضافة إلى المفضلة">
-              <i class="fas fa-heart"></i>
+            <button
+              class="btn btn-warning btn-lg flex-fill"
+              aria-label="إضافة إلى السلة"
+            >
+              <i class="fas fa-handshake"></i>
+              ايجار
+            </button>
+          </div>
+          <div
+            class="d-grid gap-2 d-md-flex"
+            *ngIf="product.status === 'ايجار و شراء'"
+          >
+            <button
+              class="btn btn-warning btn-lg flex-fill"
+              aria-label="إضافة إلى السلة"
+            >
+              <i class="fas fa-shopping-cart me-2"></i>
+              شراء
             </button>
           </div>
         </div>
 
-        <!-- Product Features -->
-        <div class="product-features mt-4">
-          <h5>مميزات المنتج</h5>
+        <!-- Additional Attributes -->
+        <div
+          class="additional-attributes mt-4"
+          *ngIf="getAdditionalAttributes().length > 0"
+        >
+          <h5>خصائص إضافية</h5>
           <ul class="list-unstyled">
-            <li><i class="fas fa-check text-success me-2"></i>جودة عالية</li>
-            <li><i class="fas fa-check text-success me-2"></i>ضمان لمدة سنة</li>
-            <li><i class="fas fa-check text-success me-2"></i>شحن مجاني</li>
-            <li><i class="fas fa-check text-success me-2"></i>إرجاع مجاني خلال 30 يوم</li>
+            <li *ngFor="let attr of getAdditionalAttributes()">
+              <strong>{{ attr.key }}:</strong> {{ attr.value }}
+            </li>
           </ul>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Image Zoom Modal -->
+  <div
+    class="image-zoom"
+    *ngIf="showImageZoom"
+    (click)="closeImageZoom()"
+    role="dialog"
+    aria-label="تكبير الصورة"
+  >
+    <div class="image-zoom-content" (click)="$event.stopPropagation()">
+      <img [src]="zoomedImageUrl" alt="صورة مكبرة" class="img-fluid" />
+      <button
+        class="btn btn-close"
+        (click)="closeImageZoom()"
+        aria-label="إغلاق التكبير"
+      ></button>
     </div>
   </div>
 
@@ -110,13 +241,26 @@
   <div class="related-products mt-5" *ngIf="relatedProducts.length > 0">
     <h3 class="mb-4">منتجات ذات صلة</h3>
     <div class="row">
-      <div class="col-lg-3 col-md-6 mb-4" *ngFor="let relatedProduct of relatedProducts">
-        <div class="card h-100">
-          <img [src]="relatedProduct.image" alt="{{relatedProduct.nameAr}}" class="card-img-top">
+      <div
+        class="col-lg-3 col-md-6 mb-4"
+        *ngFor="let relatedProduct of relatedProducts"
+      >
+        <div class="card h-100 shadow-sm">
+          <img
+            [src]="relatedProduct.image"
+            alt="{{ relatedProduct.nameAr }}"
+            class="card-img-top"
+          />
           <div class="card-body">
             <h6 class="card-title">{{ relatedProduct.nameAr }}</h6>
-            <p class="card-text text-warning">{{ relatedProduct.price | currency:'SAR':'symbol':'1.2-2' }}</p>
-            <a [routerLink]="['/product', relatedProduct.id]" class="btn btn-outline-warning btn-sm">
+            <p class="card-text text-warning">
+              {{ relatedProduct.price | currency : "SAR" : "symbol" : "1.2-2" }}
+            </p>
+            <a
+              [routerLink]="['/product', relatedProduct.id]"
+              class="btn btn-outline-warning btn-sm"
+              [attr.aria-label]="'عرض تفاصيل ' + relatedProduct.nameAr"
+            >
               عرض التفاصيل
             </a>
           </div>

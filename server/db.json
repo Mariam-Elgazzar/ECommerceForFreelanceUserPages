@@ -649,6 +649,30 @@
       "payment": {
         "method": "cash_on_delivery"
       }
+    },
+    {
+      "id": "cbfb",
+      "userId": 1,
+      "date": "2025-06-15T10:43:26.240Z",
+      "status": "قيد المعالجة",
+      "total": 250000,
+      "items": [
+        {
+          "productId": "3",
+          "quantity": 1,
+          "price": 250000
+        }
+      ],
+      "shipping": {
+        "address": "Kafer El Hema",
+        "city": "Tanta",
+        "country": "المملكة العربية السعودية",
+        "method": "standard",
+        "cost": 0
+      },
+      "payment": {
+        "method": "cash_on_delivery"
+      }
     }
   ],
   "faqs": [

@@ -1,168 +1,199 @@
-import { Component, inject } from "@angular/core"
-import { CommonModule } from "@angular/common"
-import { RouterModule } from "@angular/router"
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angular/forms"
-import { User } from "../../models/category"
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { AuthService, LoginResponse } from '../../services/auth.service';
+import { ApiService } from '../../services/api.service';
 
 @Component({
-  selector: "app-profile",
+  selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, RouterModule, ReactiveFormsModule],
-  templateUrl: "./profile.component.html",
-  styleUrls: ["./profile.component.scss"],
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent {
-  private fb = inject(FormBuilder)
+  private fb = inject(FormBuilder);
+  user!: LoginResponse | null;
 
-  user: User = {
-    id: 1,
-    name: "أحمد محمد السعيد",
-    email: "ahmed@example.com",
-    phone: "+966 50 123 4567",
-    address: "شارع الملك فهد، الرياض",
-    city: "الرياض",
-    country: "المملكة العربية السعودية",
-    avatar: "/users/u1.jpg",
-    joinDate: "2023-01-15",
-  }
+  profileForm: FormGroup;
+  passwordForm: FormGroup;
+  activeTab = 'profile';
+  isEditing = false;
+  isSubmitting = false;
 
-  profileForm: FormGroup
-  passwordForm: FormGroup
-  activeTab = "profile"
-  isEditing = false
-  isSubmitting = false
-
-  orders = [
-    {
-      id: "ORD-001",
-      date: "2024-01-15",
-      status: "مكتمل",
-      total: 25000,
-      items: 3,
-    },
-    {
-      id: "ORD-002",
-      date: "2024-01-10",
-      status: "قيد التنفيذ",
-      total: 45000,
-      items: 2,
-    },
-    {
-      id: "ORD-003",
-      date: "2024-01-05",
-      status: "ملغي",
-      total: 15000,
-      items: 1,
-    },
-  ]
-
-  constructor() {
+  constructor(private authService: AuthService) {
     this.profileForm = this.fb.group({
-      name: [this.user.name, [Validators.required, Validators.minLength(2)]],
-      email: [this.user.email, [Validators.required, Validators.email]],
-      phone: [this.user.phone, [Validators.required]],
-      address: [this.user.address, [Validators.required]],
-      city: [this.user.city, [Validators.required]],
-      country: [this.user.country, [Validators.required]],
-    })
+      firstName: [
+        this.user?.firstName,
+        [Validators.required, Validators.minLength(2)],
+      ],
+      lastName: [
+        this.user?.lastName,
+        [Validators.required, Validators.minLength(2)],
+      ],
+      email: [this.user?.email, [Validators.required, Validators.email]],
+      phoneNumber: [this.user?.phoneNumber, [Validators.required]],
+      address: [this.user?.address, [Validators.required]],
+    });
 
     this.passwordForm = this.fb.group(
       {
-        currentPassword: ["", [Validators.required]],
-        newPassword: ["", [Validators.required, Validators.minLength(8)]],
-        confirmPassword: ["", [Validators.required]],
+        currentPassword: ['', [Validators.required]],
+        newPassword: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: ['', [Validators.required]],
       },
-      { validators: this.passwordMatchValidator },
-    )
+      { validators: this.passwordMatchValidator }
+    );
+    this.loadUserProfile();
+  }
+
+  loadUserProfile() {
+    // Example: Load user profile from AuthService or ApiService
+    this.user = this.authService.getCurrentUser();
+    if (this.user) {
+      console.log('User loaded:', this.user);
+      // Patch the form with user data
+      this.profileForm.patchValue({
+        firstName: this.user.firstName,
+        lastName: this.user.lastName,
+        email: this.user.email,
+        phoneNumber: this.user.phoneNumber,
+        address: this.user.address,
+        id: this.user.id,
+      });
+    }
   }
 
   passwordMatchValidator(form: FormGroup) {
-    const newPassword = form.get("newPassword")
-    const confirmPassword = form.get("confirmPassword")
+    const newPassword = form.get('newPassword');
+    const confirmPassword = form.get('confirmPassword');
 
-    if (newPassword && confirmPassword && newPassword.value !== confirmPassword.value) {
-      confirmPassword.setErrors({ passwordMismatch: true })
-      return { passwordMismatch: true }
+    if (
+      newPassword &&
+      confirmPassword &&
+      newPassword.value !== confirmPassword.value
+    ) {
+      confirmPassword.setErrors({ passwordMismatch: true });
+      return { passwordMismatch: true };
     }
 
-    return null
+    return null;
   }
 
   setActiveTab(tab: string) {
-    this.activeTab = tab
+    this.activeTab = tab;
   }
 
   toggleEdit() {
-    this.isEditing = !this.isEditing
+    this.isEditing = !this.isEditing;
     if (!this.isEditing) {
-      this.profileForm.patchValue(this.user)
+      // this.profileForm.patchValue(this.user);
     }
   }
 
   onProfileSubmit() {
     if (this.profileForm.valid) {
-      this.isSubmitting = true
-
-      setTimeout(() => {
-        this.user = { ...this.user, ...this.profileForm.value }
-        this.isSubmitting = false
-        this.isEditing = false
-      }, 1000)
+      this.isSubmitting = true;
+      //  server request
+      this.authService
+        .updateProfile(
+          this.profileForm.value.firstName,
+          this.profileForm.value.lastName,
+          this.profileForm.value.email,
+          this.profileForm.value.phoneNumber,
+          this.profileForm.value.address
+        )
+        .subscribe({
+          next: (response) => {
+            this.user = { ...this.profileForm.value, id: this.user?.id };
+            if (this.user) {
+              this.authService.setUser(this.user);
+            }
+            this.isSubmitting = false;
+            this.isEditing = false;
+            alert('تم تحديث الملف الشخصي بنجاح');
+          },
+          error: (error) => {
+            this.isSubmitting = false;
+            alert('فشل تحديث الملف الشخصي. يرجى المحاولة مرة أخرى.');
+          },
+        });
     }
   }
 
   onPasswordSubmit() {
-    if (this.passwordForm.valid) {
-      this.isSubmitting = true
+    if (this.passwordForm.valid && this.user?.id) {
+      this.isSubmitting = true;
 
-      setTimeout(() => {
-        this.isSubmitting = false
-        this.passwordForm.reset()
-        alert("تم تغيير كلمة المرور بنجاح")
-      }, 1000)
+      this.authService
+        .changePassword(
+          this.user?.id ?? '',
+          this.passwordForm.value.currentPassword,
+          this.passwordForm.value.newPassword
+        )
+        .subscribe({
+          next: (response) => {
+            alert('تم تغيير كلمة المرور بنجاح');
+            this.isSubmitting = false;
+            this.passwordForm.reset();
+          },
+          error: (error) => {
+            this.isSubmitting = false;
+            alert('فشل تغيير كلمة المرور. يرجى المحاولة مرة أخرى.');
+            console.log(this.passwordForm.value.currentPassword);
+            console.log(this.passwordForm.value.newPassword);
+            console.log(this.user?.id);
+          },
+        });
     }
   }
-
   onFileSelected(event: any) {
-    const file = event.target.files[0]
+    const file = event.target.files[0];
     if (file) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.user.avatar = e.target.result
-      }
-      reader.readAsDataURL(file)
+        // this.user.avatar = e.target.result;
+      };
+      reader.readAsDataURL(file);
     }
   }
 
   getStatusClass(status: string): string {
     switch (status) {
-      case "مكتمل":
-        return "badge bg-success"
-      case "قيد التنفيذ":
-        return "badge bg-warning text-dark"
-      case "ملغي":
-        return "badge bg-danger"
+      case 'مكتمل':
+        return 'badge bg-success';
+      case 'قيد التنفيذ':
+        return 'badge bg-warning text-dark';
+      case 'ملغي':
+        return 'badge bg-danger';
       default:
-        return "badge bg-secondary"
+        return 'badge bg-secondary';
     }
   }
 
   isFieldInvalid(formName: string, fieldName: string): boolean {
-    const form = formName === "profile" ? this.profileForm : this.passwordForm
-    const field = form.get(fieldName)
-    return !!(field && field.invalid && field.touched)
+    const form = formName === 'profile' ? this.profileForm : this.passwordForm;
+    const field = form.get(fieldName);
+    return !!(field && field.invalid && field.touched);
   }
 
   getFieldError(formName: string, fieldName: string): string {
-    const form = formName === "profile" ? this.profileForm : this.passwordForm
-    const field = form.get(fieldName)
+    const form = formName === 'profile' ? this.profileForm : this.passwordForm;
+    const field = form.get(fieldName);
 
     if (field?.errors) {
-      if (field.errors["required"]) return "هذا الحقل مطلوب"
-      if (field.errors["email"]) return "البريد الإلكتروني غير صحيح"
-      if (field.errors["minlength"]) return `الحد الأدنى ${field.errors["minlength"].requiredLength} أحرف`
-      if (field.errors["passwordMismatch"]) return "كلمات المرور غير متطابقة"
+      if (field.errors['required']) return 'هذا الحقل مطلوب';
+      if (field.errors['email']) return 'البريد الإلكتروني غير صحيح';
+      if (field.errors['minlength'])
+        return `الحد الأدنى ${field.errors['minlength'].requiredLength} أحرف`;
+      if (field.errors['passwordMismatch']) return 'كلمات المرور غير متطابقة';
     }
-    return ""
+    return '';
   }
 }

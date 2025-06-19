@@ -1,165 +1,196 @@
-import { Component, type OnInit, inject } from "@angular/core"
-import { CommonModule } from "@angular/common"
-import { RouterLink } from "@angular/router"
-import { FormsModule } from "@angular/forms"
-import { CartService } from "../../services/cart.service"
-import { ToastService } from "../../services/toast.service"
-import { ApiService } from "../../services/api.service"
-import { CartItem, Product } from "../../models/product"
+import { Component, type OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { CartService } from '../../services/cart.service';
+import { ToastService } from '../../services/toast.service';
+import { ApiService } from '../../services/api.service';
+import { CartItem, Product } from '../../models/product';
+import { ProductParams } from '../../interfaces/product.interface';
 
 @Component({
-  selector: "app-cart",
+  selector: 'app-cart',
   standalone: true,
   imports: [CommonModule, RouterLink, FormsModule],
-  templateUrl: "./cart.component.html",
-  styleUrls: ["./cart.component.scss"],
+  templateUrl: './cart.component.html',
+  styleUrls: ['./cart.component.scss'],
 })
 export class CartComponent implements OnInit {
-  private cartService = inject(CartService)
-  private toastService = inject(ToastService)
-  private apiService = inject(ApiService)
+  private cartService = inject(CartService);
+  private toastService = inject(ToastService);
+  private apiService = inject(ApiService);
 
-  cartItems: CartItem[] = []
-  relatedProducts: Product[] = []
-  loading = false
-  promoCode = ""
-  promoDiscount = 0
-  isPromoApplied = false
+  cartItems: CartItem[] = [];
+  relatedProducts: Product[] = [];
+  products: Product[] = [];
+  loading = false;
+  promoCode = '';
+  promoDiscount = 0;
+  isPromoApplied = false;
+
+  // Pagination and filter properties (add defaults as needed)
+  currentPage: number = 1;
+  pageSize: number = 10;
+  searchTerm: string = '';
+  statusFilter: string | null = null;
+  categoryFilter: string | null = null;
+  sortColumn: string = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
 
   // Promo codes (in a real app, this would come from the API)
   promoCodes = {
     SAVE10: 0.1,
     WELCOME: 0.05,
     CATERPILLAR: 0.15,
-  }
+  };
 
   ngOnInit(): void {
-    this.loadCartItems()
-    this.loadRelatedProducts()
+    this.loadCartItems();
+    this.loadRelatedProducts();
   }
 
   private loadCartItems(): void {
-    this.cartItems = this.cartService.items()
+    this.cartItems = this.cartService.items();
   }
 
   private loadRelatedProducts(): void {
-    this.loading = true
-    this.apiService.getProducts({ limit: 4 }).subscribe({
-      next: (products) => {
-        // Filter out products that are already in cart
-        const cartProductIds = this.cartItems.map((item) => item.product.id)
-        this.relatedProducts = products.filter((product) => !cartProductIds.includes(product.id))
-        this.loading = false
+    this.loading = true;
+    this.loading = true;
+    const params: ProductParams = {
+      pageIndex: this.currentPage,
+      pageSize: this.pageSize,
+      search: this.searchTerm,
+      status: this.statusFilter || undefined,
+      categoryId: this.categoryFilter ? Number(this.categoryFilter) : undefined,
+      sortProp: this.sortColumn as any,
+      sortDirection: this.sortDirection as any,
+    };
+
+    this.apiService.getAllProducts(params).subscribe({
+      next: (response) => {
+        this.products = response.data.map((product: any) => ({
+          ...product,
+          status: product.status ?? '',
+          brand: product.brand ?? '',
+          model: product.model ?? '',
+          createdAt: product.createdAt ?? '',
+          productMedia: product.productMedia ?? [],
+        }));
+
+        // Clear any previous error messages
       },
       error: (error) => {
-        console.error("Error loading related products:", error)
-        this.loading = false
+        console.error('Error loading products:', error);
+        this.loading = false;
       },
-    })
+    });
   }
 
   updateQuantity(productId: number, quantity: number): void {
     if (quantity < 1) {
-      this.removeItem(productId)
-      return
+      this.removeItem(productId);
+      return;
     }
 
-    this.cartService.updateQuantity(productId, quantity)
-    this.loadCartItems()
+    this.cartService.updateQuantity(productId, quantity);
+    this.loadCartItems();
   }
 
   removeItem(productId: number): void {
-    this.cartService.removeFromCart(productId)
-    this.loadCartItems()
-    this.loadRelatedProducts() // Refresh related products
+    this.cartService.removeFromCart(productId);
+    this.loadCartItems();
+    this.loadRelatedProducts(); // Refresh related products
   }
 
   clearCart(): void {
-    if (confirm("هل أنت متأكد من أنك تريد إفراغ سلة التسوق؟")) {
-      this.cartService.clearCart()
-      this.loadCartItems()
-      this.promoDiscount = 0
-      this.isPromoApplied = false
-      this.promoCode = ""
+    if (confirm('هل أنت متأكد من أنك تريد إفراغ سلة التسوق؟')) {
+      this.cartService.clearCart();
+      this.loadCartItems();
+      this.promoDiscount = 0;
+      this.isPromoApplied = false;
+      this.promoCode = '';
       this.toastService.show({
-        message: "تم إفراغ سلة التسوق",
-        type: "info",
-      })
+        message: 'تم إفراغ سلة التسوق',
+        type: 'info',
+      });
     }
   }
 
   addToCart(product: Product): void {
-    this.cartService.addToCart(product)
-    this.loadCartItems()
-    this.loadRelatedProducts()
+    this.cartService.addToCart(product);
+    this.loadCartItems();
+    this.loadRelatedProducts();
   }
 
   applyPromoCode(): void {
-    const code = this.promoCode.toUpperCase()
+    const code = this.promoCode.toUpperCase();
 
     if (this.promoCodes[code as keyof typeof this.promoCodes]) {
-      this.promoDiscount = this.promoCodes[code as keyof typeof this.promoCodes]
-      this.isPromoApplied = true
+      this.promoDiscount =
+        this.promoCodes[code as keyof typeof this.promoCodes];
+      this.isPromoApplied = true;
       this.toastService.show({
-        message: `تم تطبيق كود الخصم ${code} بنجاح! خصم ${(this.promoDiscount * 100).toFixed(0)}%`,
-        type: "success",
-      })
+        message: `تم تطبيق كود الخصم ${code} بنجاح! خصم ${(
+          this.promoDiscount * 100
+        ).toFixed(0)}%`,
+        type: 'success',
+      });
     } else {
       this.toastService.show({
-        message: "كود الخصم غير صحيح",
-        type: "error",
-      })
+        message: 'كود الخصم غير صحيح',
+        type: 'error',
+      });
     }
   }
 
   removePromoCode(): void {
-    this.promoDiscount = 0
-    this.isPromoApplied = false
-    this.promoCode = ""
+    this.promoDiscount = 0;
+    this.isPromoApplied = false;
+    this.promoCode = '';
     this.toastService.show({
-      message: "تم إلغاء كود الخصم",
-      type: "info",
-    })
+      message: 'تم إلغاء كود الخصم',
+      type: 'info',
+    });
   }
 
   getSubtotal(): number {
-    return this.cartService.getTotal()
+    return this.cartService.getTotal();
   }
 
   getDiscount(): number {
-    return this.getSubtotal() * this.promoDiscount
+    return this.getSubtotal() * this.promoDiscount;
   }
 
   getTax(): number {
-    return (this.getSubtotal() - this.getDiscount()) * 0.15 // 15% VAT
+    return (this.getSubtotal() - this.getDiscount()) * 0.15; // 15% VAT
   }
 
   getTotal(): number {
-    return this.getSubtotal() - this.getDiscount() + this.getTax()
+    return this.getSubtotal() - this.getDiscount() + this.getTax();
   }
 
   getItemCount(): number {
-    return this.cartService.getItemCount()
+    return this.cartService.getItemCount();
   }
 
   increaseQuantity(item: CartItem): void {
-    this.updateQuantity(item.product.id, item.quantity + 1)
+    this.updateQuantity(item.product.id, item.quantity + 1);
   }
 
   decreaseQuantity(item: CartItem): void {
-    this.updateQuantity(item.product.id, item.quantity - 1)
+    this.updateQuantity(item.product.id, item.quantity - 1);
   }
 
   getItemTotal(item: CartItem): number {
-    return item.product.price * item.quantity
+    return item.product.price * item.quantity;
   }
 
   // Save for later functionality (placeholder)
   saveForLater(productId: number): void {
     this.toastService.show({
-      message: "تم حفظ المنتج للاحقاً",
-      type: "info",
-    })
+      message: 'تم حفظ المنتج للاحقاً',
+      type: 'info',
+    });
     // In a real app, you would implement save for later functionality
   }
 
@@ -167,21 +198,23 @@ export class CartComponent implements OnInit {
   shareCart(): void {
     if (navigator.share) {
       navigator.share({
-        title: "سلة التسوق - كاتربيلر",
-        text: `لدي ${this.getItemCount()} منتجات في سلة التسوق بقيمة ${this.getTotal().toFixed(2)} ريال`,
+        title: 'سلة التسوق - كاتربيلر',
+        text: `لدي ${this.getItemCount()} منتجات في سلة التسوق بقيمة ${this.getTotal().toFixed(
+          2
+        )} ريال`,
         url: window.location.href,
-      })
+      });
     } else {
       // Fallback for browsers that don't support Web Share API
-      navigator.clipboard.writeText(window.location.href)
+      navigator.clipboard.writeText(window.location.href);
       this.toastService.show({
-        message: "تم نسخ رابط سلة التسوق",
-        type: "success",
-      })
+        message: 'تم نسخ رابط سلة التسوق',
+        type: 'success',
+      });
     }
   }
 
   trackByProductId(index: number, item: CartItem): number {
-    return item.product.id
+    return item.product.id;
   }
 }

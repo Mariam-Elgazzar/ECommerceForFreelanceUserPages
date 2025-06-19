@@ -3,11 +3,13 @@
   <div class="row mb-5">
     <div class="col-12 text-center">
       <h1 class="display-4 mb-3">فئات المنتجات</h1>
-      <p class="lead text-muted">اكتشف مجموعتنا الواسعة من معدات كاتربيلر</p>
+      <p class="lead text-muted">اكتشف مجموعتنا الواسعة من معدات العوفي</p>
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb justify-content-center">
-          <li class="breadcrumb-item"><a routerLink="/">الرئيسية</a></li>
-          <li class="breadcrumb-item active">الفئات</li>
+          <li class="breadcrumb-item">
+            <a routerLink="/">الرئيسية / </a>
+          </li>
+          <li class="breadcrumb-item active"><a routerLink="/"> الفئات</a></li>
         </ol>
       </nav>
     </div>
@@ -19,35 +21,27 @@
       <div class="card border-0 shadow-sm">
         <div class="card-body">
           <div class="row align-items-center">
-            <div class="col-md-6 mb-3 mb-md-0">
+            <div class="col-md-10 mb-3 mb-md-0">
               <div class="search-box">
                 <i class="fas fa-search"></i>
-                <input 
-                  type="text" 
-                  class="form-control" 
+                <input
+                  type="text"
+                  class="form-control"
                   placeholder="ابحث في الفئات..."
                   [(ngModel)]="searchTerm"
-                  (input)="onSearchChange()">
+                  (input)="onSearchChange()"
+                />
               </div>
             </div>
-            <div class="col-md-4 mb-3 mb-md-0">
-              <label for="sortBySelect" class="visually-hidden">ترتيب الفئات</label>
-              <select 
-                id="sortBySelect"
-                class="form-select" 
-                [(ngModel)]="sortBy"
-                (change)="onSortChange()">
-                <option value="name">ترتيب حسب الاسم</option>
-                <option value="productCount">ترتيب حسب عدد المنتجات</option>
-              </select>
-            </div>
+
             <div class="col-md-2">
-              <button 
-                class="btn btn-outline-warning w-100" 
+              <button
+                class="btn btn-outline-warning w-100"
                 (click)="refreshCategories()"
-                [disabled]="loading">
-                <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i>
-                <span class="d-none d-md-inline ms-2">تحديث</span>
+                [disabled]="loading"
+              >
+                <i class="fas fa-sync-alt" [class.fa-spin]="loading"> </i>
+                <span class="d-none d-md-inline m-2">تحديث </span>
               </button>
             </div>
           </div>
@@ -58,7 +52,11 @@
 
   <!-- Loading State -->
   <div *ngIf="loading" class="text-center py-5">
-    <div class="spinner-border text-warning" role="status" style="width: 3rem; height: 3rem;">
+    <div
+      class="spinner-border text-warning"
+      role="status"
+      style="width: 3rem; height: 3rem"
+    >
       <span class="visually-hidden">جاري التحميل...</span>
     </div>
     <p class="mt-3 text-muted">جاري تحميل الفئات...</p>
@@ -67,14 +65,20 @@
   <!-- Categories Grid -->
   <div *ngIf="!loading && filteredCategories.length > 0">
     <div class="row g-4 mb-5">
-      <div class="col-lg-4 col-md-6" *ngFor="let category of filteredCategories; trackBy: trackByCategory">
+      <div
+        class="col-lg-4 col-md-6"
+        *ngFor="let category of filteredCategories; trackBy: trackByCategory"
+      >
         <app-category-card [category]="category"></app-category-card>
       </div>
     </div>
   </div>
 
   <!-- No Categories Found -->
-  <div *ngIf="!loading && filteredCategories.length === 0" class="text-center py-5">
+  <div
+    *ngIf="!loading && filteredCategories.length === 0"
+    class="text-center py-5"
+  >
     <div class="no-results">
       <i class="fas fa-search fa-3x text-muted mb-3"></i>
       <h3>لم يتم العثور على فئات</h3>
@@ -93,7 +97,7 @@
         <div class="row text-center">
           <div class="col-md-3 col-6 mb-3">
             <div class="stat-item">
-              <h3 class="text-warning mb-1">{{ getTotalProducts() }}</h3>
+              <!-- <h3 class="text-warning mb-1">{{ getTotalProducts() }}</h3> -->
               <p class="text-muted mb-0">إجمالي المنتجات</p>
             </div>
           </div>
@@ -125,7 +129,9 @@
     <div class="col-12 text-center">
       <div class="cta-section bg-warning text-dark rounded p-5">
         <h3 class="mb-3">هل تحتاج مساعدة في اختيار المعدة المناسبة؟</h3>
-        <p class="mb-4">فريقنا من الخبراء جاهز لمساعدتك في العثور على المعدة المثالية لمشروعك</p>
+        <p class="mb-4">
+          فريقنا من الخبراء جاهز لمساعدتك في العثور على المعدة المثالية لمشروعك
+        </p>
         <div class="d-flex justify-content-center gap-3">
           <a routerLink="/support" class="btn btn-dark btn-lg">
             <i class="fas fa-phone me-2"></i>
