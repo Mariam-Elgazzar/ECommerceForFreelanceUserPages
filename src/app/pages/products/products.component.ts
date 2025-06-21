@@ -12,13 +12,24 @@ import { RouterModule, ActivatedRoute } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ApiService } from '../../services/api.service';
-import { Product, ProductParams } from '../../interfaces/product.interface';
+import {
+  Product,
+  ProductParams,
+  statusEnum,
+} from '../../interfaces/product.interface';
 import { Category, CategoryParams } from '../../interfaces/category.interface';
 import { HighlightPipe } from '../../pipes/highlight.pipe';
+import { Brand, BrandService } from '../../services/brand.service';
 
 interface AttributeFilter {
   key: string;
   values: { value: string; count: number }[];
+}
+
+interface Status {
+  value: string;
+  label: string;
+  icon: string;
 }
 
 @Component({
@@ -40,68 +51,63 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
 
   // Pagination
   currentPage = 1;
-  pageSize = 10;
+  pageSize = 12;
   totalPages = 1;
   totalItems = 0;
 
-  // Filters
-  searchTerm = '';
-  statusFilter = '';
+  // Filters (aligned with original HTML)
   categoryFilter = '';
-  brandFilter = ''; // Added
-  modelFilter = ''; // Added
-  quantityFilter: number | null = null; // Added
+  searchTerm = '';
+  brandFilter = '';
+  statusFilter = '';
+  modelFilter = '';
+  quantityFilter: number | null = null;
   attributeFilters: Record<string, string[]> = {};
   sortColumn = 'name';
   sortDirection: 0 | 1 = 0;
-  activeFilter: string | null = null;
   sortBy: string = 'name';
-
-  // Filter panel state
-  showFilters = false;
-  activeDropdown: string | null = null;
 
   // Filter search terms
   statusSearchTerm = '';
   categorySearchTerm = '';
   attributeSearchTerms: Record<string, string> = {};
 
-  // Available attributes for filtering
+  // Available attributes and statuses
   availableAttributes: AttributeFilter[] = [];
-
-  // Modal state
-  isModalOpen = false;
-  isDetailsModalOpen = false;
-  editingProduct: Product | null = null;
-  selectedProduct: Product | null = null;
-  deleteConfirm: { isOpen: boolean; productId: number | null } = {
-    isOpen: false,
-    productId: null,
-  };
+  statuses: Status[] = [
+    { value: '', label: 'الكل', icon: 'fa-globe' },
+    { value: statusEnum.purchase, label: 'شراء', icon: 'fa-shopping-cart' },
+    { value: statusEnum.lease, label: 'إيجار', icon: 'fa-key' },
+  ];
 
   // Memoization caches
   private categoryCache: Category[] | null = null;
   private statusCache: string[] | null = null;
 
+  // RxJS subjects for debouncing
   private searchSubject = new Subject<string>();
   private brandSubject = new Subject<string>();
   private modelSubject = new Subject<string>();
+  private statusSubject = new Subject<string>();
   private quantitySubject = new Subject<number | null>();
   private searchSubscription: Subscription;
   private brandSubscription: Subscription;
   private modelSubscription: Subscription;
-  private quantitySubscription: Subscription;
+  private statusSubscription: Subscription;
+  brands!: Brand[];
+  error!: string;
 
   constructor(
     private productService: ApiService,
     private categoryService: ApiService,
+    private brandService: BrandService,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
   ) {
     this.searchSubscription = this.searchSubject
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((term: string) => {
-        this.onSearch(term);
+        this.onSearchChange(term);
       });
     this.brandSubscription = this.brandSubject
       .pipe(debounceTime(300), distinctUntilChanged())
@@ -113,18 +119,33 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
       .subscribe((model: string) => {
         this.onModelFilterChange(model);
       });
-    this.quantitySubscription = this.quantitySubject
+    this.statusSubscription = this.statusSubject
       .pipe(debounceTime(300), distinctUntilChanged())
-      .subscribe((quantity: number | null) => {
-        this.onQuantityFilterChange(quantity);
+      .subscribe((status: string) => {
+        this.onStatusFilterChange(status);
       });
   }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.categoryId = params['id'] ? Number(params['id']) : null;
+      this.searchTerm = params['search'] || '';
+      this.categoryFilter = params['category'] || '';
+      this.brandFilter = params['brand'] || '';
+      this.statusFilter = params['status'] || '';
+      this.modelFilter = params['model'] || '';
+      this.pageSize = 12;
+      this.loadBrands();
       this.loadCategories();
-      this.loadProducts(this.categoryId || 0);
+      this.loadProducts(
+        params['id']
+          ? {
+              categoryId: Number(params['id']),
+              pageIndex: 1,
+              pageSize: this.pageSize,
+            }
+          : undefined
+      );
     });
   }
 
@@ -132,7 +153,6 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
     this.searchSubscription.unsubscribe();
     this.brandSubscription.unsubscribe();
     this.modelSubscription.unsubscribe();
-    this.quantitySubscription.unsubscribe();
   }
 
   @HostListener('document:click', ['$event'])
@@ -142,59 +162,122 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
       this.activeDropdown = null;
     }
   }
-
-  // Filter panel methods
-  toggleFiltersPanel(): void {
-    this.showFilters = !this.showFilters;
-    if (!this.showFilters) {
-      this.activeDropdown = null;
+  private loadBrands(): void {
+    this.brandService.getAllBrands().subscribe({
+      next: (brands) => {
+        this.brands = brands;
+      },
+      error: (err) => {
+        this.error = 'Failed to load brands. Please try again later.';
+        console.error('Error fetching brands:', err);
+      },
+    });
+  }
+  // Filter methods (aligned with original HTML)
+  onCategoryFilterChange(category: string): void {
+    this.categoryFilter = category;
+    this.currentPage = 1;
+    if (category) {
+      this.loadProducts({
+        pageIndex: this.currentPage,
+        pageSize: this.pageSize,
+        categoryId: Number(category),
+        search: this.searchTerm || '',
+        status: this.statusFilter || '',
+        brand: this.brandFilter || '',
+      });
     } else {
-      setTimeout(() => {
-        const firstFilter = document.querySelector(
-          '.collapse.show input'
-        ) as HTMLElement;
-        firstFilter?.focus();
-      }, 0);
+      this.loadProducts({
+        pageIndex: this.currentPage,
+        pageSize: this.pageSize,
+      });
     }
   }
 
-  closeFiltersPanel(): void {
-    this.showFilters = false;
-    this.activeDropdown = null;
+  onSearchChange(term: string): void {
+    this.searchSubject.next(term);
+    this.searchTerm = term;
+    // this.categoryFilter = '';
+    // this.brandFilter = '';
+
+    this.currentPage = 1;
+    this.loadProducts({
+      pageIndex: this.currentPage,
+      pageSize: this.pageSize,
+      search: term,
+      status: this.statusFilter || '',
+      categoryId:
+        this.categoryFilter && this.categoryFilter !== '0'
+          ? Number(this.categoryFilter)
+          : undefined,
+      brand: this.brandFilter || '',
+    });
   }
 
-  toggleDropdown(dropdown: string): void {
-    this.activeDropdown = this.activeDropdown === dropdown ? null : dropdown;
+  onSearch(term: string): void {
+    this.searchTerm = term;
+    this.currentPage = 1;
+    this.loadProducts();
   }
 
-  selectStatus(status: string): void {
-    this.onStatusFilterChange(status);
-    this.activeDropdown = null;
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.onSearch('');
   }
 
-  selectCategory(categoryId: string): void {
-    this.onCategoryFilterChange(categoryId);
-    this.activeDropdown = null;
+  onBrandFilterChange(brand: string): void {
+    this.brandFilter = brand;
+    this.currentPage = 1;
+
+    this.loadProducts({
+      pageIndex: this.currentPage,
+      pageSize: this.pageSize,
+      brand: brand || '',
+      search: this.searchTerm || '',
+      status: this.statusFilter || '',
+      categoryId:
+        this.categoryFilter && this.categoryFilter !== '0'
+          ? Number(this.categoryFilter)
+          : 0,
+    });
   }
 
-  applyFilters(): void {
-    this.closeFiltersPanel();
+  onStatusFilterChange(status: string): void {
+    this.statusFilter = status;
+    this.currentPage = 1;
+    this.loadProducts({
+      pageIndex: this.currentPage,
+      pageSize: this.pageSize,
+      search: this.searchTerm || '',
+      status: status,
+      categoryId:
+        this.categoryFilter && this.categoryFilter !== '0'
+          ? Number(this.categoryFilter)
+          : undefined,
+      brand: this.brandFilter || '',
+    });
   }
 
-  getActiveFiltersCount(): number {
-    let count = 0;
-    if (this.statusFilter) count++;
-    if (this.categoryFilter) count++;
-    if (this.brandFilter) count++;
-    if (this.modelFilter) count++;
-    if (this.quantityFilter !== null) count++;
-    count += Object.values(this.attributeFilters).reduce(
-      (sum, values) => sum + values.length,
-      0
-    );
-    return count;
+  onModelFilterChange(model: string): void {
+    this.modelFilter = model;
+    this.currentPage = 1;
+    this.loadProducts();
   }
 
+  // Dismiss function to reset all filters and search
+  dismiss(): void {
+    this.categoryFilter = '';
+    this.brandFilter = '';
+    this.statusFilter = '';
+    this.searchTerm = '';
+    this.modelFilter = '';
+    this.quantityFilter = null;
+    this.attributeFilters = {};
+    this.currentPage = 1;
+    this.loadProducts();
+  }
+
+  // Other methods (unchanged)
   loadCategories(): void {
     this.loading = true;
     this.errorMessage = null;
@@ -220,29 +303,29 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
       },
     });
   }
-  loadProducts(cat: number): void {
+
+  loadProducts(productParams?: ProductParams): void {
     this.loading = true;
     this.errorMessage = null;
     const params: ProductParams = {
       pageIndex: this.currentPage,
       pageSize: this.pageSize,
-      search: this.searchTerm || undefined,
-      status: this.statusFilter || undefined,
+      search: this.searchTerm || '',
+      status: this.statusFilter || '',
       categoryId:
-        cat !== 0
-          ? cat
+        productParams && productParams.categoryId !== 0
+          ? productParams.categoryId
           : this.categoryFilter
           ? Number(this.categoryFilter)
           : undefined,
-      brand: this.brandFilter || undefined,
-      model: this.modelFilter || undefined,
-      quantity: this.quantityFilter !== null ? this.quantityFilter : undefined,
+      brand: this.brandFilter || '',
+      model: this.modelFilter || '',
       sortDirection: this.sortDirection,
     };
 
     this.productService.getAllProducts(params).subscribe({
       next: (response) => {
-        this.products = response.data.map((product: any) => ({
+        this.products = response.data.map((product: Product) => ({
           ...product,
           status: product.status ?? '',
           brand: product.brand ?? '',
@@ -251,7 +334,7 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
           createdAt: product.createdAt ?? '',
           productMedia: product.productMedia ?? [],
         }));
-        this.filteredProducts = this.products; // Rely on server-side filtering
+        this.filteredProducts = this.products;
         this.totalItems = response.totalCount;
         this.totalPages = Math.ceil(response.totalCount / this.pageSize);
         this.extractAvailableAttributes();
@@ -259,10 +342,12 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        console.error('Error loading products:', error);
+        this.filteredProducts = [];
+        this.totalItems = 0;
         this.errorMessage = 'فشل في تحميل المنتجات. الرجاء المحاولة لاحقاً.';
         this.loading = false;
-        this.cdr.markForCheck();
+
+        console.error('Error loading products:', error);
       },
     });
   }
@@ -308,73 +393,9 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
-  onSearchChange(term: string): void {
-    this.searchSubject.next(term);
-  }
-
-  onSearch(term: string): void {
-    this.searchTerm = term;
-    this.currentPage = 1;
-    this.loadProducts(0);
-  }
-
-  clearSearch(): void {
-    this.searchTerm = '';
-    this.onSearch('');
-  }
-
-  onSortChange(sortBy: string): void {
-    this.sortBy = sortBy;
-    switch (sortBy) {
-      case 'name':
-        this.sortColumn = 'name';
-        this.sortDirection = 0;
-        break;
-      case 'price-low':
-        this.sortColumn = 'price';
-        this.sortDirection = 0;
-        break;
-      case 'price-high':
-        this.sortColumn = 'price';
-        this.sortDirection = 1;
-        break;
-    }
-    this.currentPage = 1;
-    this.loadProducts(0);
-  }
-
-  onStatusSearchChange(term: string): void {
-    this.statusSearchTerm = term;
-    this.toggleDropdown('status');
-  }
-
-  onBrandFilterChange(brand: string): void {
-    this.brandFilter = brand;
-    this.currentPage = 1;
-    this.loadProducts(0);
-  }
-
-  onModelFilterChange(model: string): void {
-    this.modelFilter = model;
-    this.currentPage = 1;
-    this.loadProducts(0);
-  }
-
-  onQuantityFilterChange(quantity: number | null): void {
-    this.quantityFilter = quantity;
-    this.currentPage = 1;
-    this.loadProducts(0);
-  }
-
   onPageChange(page: number): void {
     this.currentPage = page;
-    this.loadProducts(0);
-  }
-
-  onPageSizeChange(size: number): void {
-    this.pageSize = Number(size);
-    this.currentPage = 1;
-    this.loadProducts(0);
+    this.loadProducts();
   }
 
   changePage(page: number): void {
@@ -382,7 +403,7 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
       return;
     }
     this.currentPage = page;
-    this.loadProducts(0);
+    this.loadProducts();
   }
 
   getPaginationRange(): number[] {
@@ -407,244 +428,50 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
     console.log('Product added to cart:', product);
   }
 
-  onRowClick(product: Product): void {
-    this.viewDetails(product);
-  }
-
-  toggleFilter(filterType: string): void {
-    this.activeFilter = this.activeFilter === filterType ? null : filterType;
-  }
-
-  onStatusFilterChange(status: string): void {
-    this.statusFilter = status;
-    this.activeFilter = null;
-    this.currentPage = 1;
-    this.loadProducts(0);
-  }
-
-  getFilteredStatuses(): string[] {
-    if (this.statusCache && this.statusSearchTerm === '') {
-      return this.statusCache;
-    }
-    const allStatuses = [...new Set(this.products.map((p) => p.status))];
-    const filtered = this.statusSearchTerm
-      ? allStatuses.filter((status) =>
-          status.toLowerCase().includes(this.statusSearchTerm.toLowerCase())
-        )
-      : allStatuses;
-    if (this.statusSearchTerm === '') {
-      this.statusCache = filtered;
-    }
-    return filtered;
-  }
-
-  getStatusCount(status: string): number {
-    return this.products.filter((p) => p.status === status).length;
-  }
-
   getTotalProductsCount(): number {
     return this.products.length;
   }
 
   get paginatedProducts(): Product[] {
-    return this.filteredProducts; // Server-side pagination
+    return this.filteredProducts;
   }
 
   getStatusClass(status: string): string {
     switch (status) {
-      case 'الايجار':
-        return 'الايجار';
-      case 'البيع':
-        return 'البيع';
-      case 'الاتنين':
-        return 'الاتنين';
+      case statusEnum.lease:
+        return 'إيجار وشراء';
+      case statusEnum.purchase:
+        return 'الشراء';
+      case statusEnum.both:
+        return 'الايجار والشراء';
       default:
         return 'status-default';
     }
   }
 
-  onCategoryFilterChange(category: string): void {
-    this.categoryFilter = category;
-    this.activeFilter = null;
-    this.currentPage = 1;
-    this.loadProducts(category ? Number(category) : 0);
-  }
-
-  getFilteredCategories(): Category[] {
-    if (this.categoryCache && this.categorySearchTerm === '') {
-      return this.categoryCache;
-    }
-    const filtered = this.categories.filter((category) =>
-      category.name
-        ?.toLowerCase()
-        .includes(this.categorySearchTerm.toLowerCase())
-    );
-    if (this.categorySearchTerm === '') {
-      this.categoryCache = filtered;
-    }
-    return filtered;
-  }
-
-  getCategoryCount(categoryId: number): number {
-    return this.products.filter((p) => p.categoryId === categoryId).length;
-  }
-
-  getCategoryName(categoryId: string): string {
-    const category = this.categories.find(
-      (c) => c.id.toString() === categoryId
-    );
-    return category?.name || 'غير محدد';
-  }
-
-  getFilteredAttributeValues(
-    attribute: AttributeFilter
-  ): { value: string; count: number }[] {
-    const searchTerm = this.attributeSearchTerms[attribute.key] || '';
-    if (!searchTerm) return attribute.values;
-    return attribute.values.filter((v) =>
-      v.value.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }
-
-  toggleAttributeValue(key: string, value: string): void {
-    if (!this.attributeFilters[key]) {
-      this.attributeFilters[key] = [];
-    }
-    const index = this.attributeFilters[key].indexOf(value);
-    if (index > -1) {
-      this.attributeFilters[key].splice(index, 1);
-      if (this.attributeFilters[key].length === 0) {
-        delete this.attributeFilters[key];
-      }
-    } else {
-      this.attributeFilters[key].push(value);
-    }
-    this.currentPage = 1;
-    this.loadProducts(0);
-  }
-
-  isAttributeValueSelected(key: string, value: string): boolean {
-    return this.attributeFilters[key]?.includes(value) || false;
+  onImageError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    target.src = 'assets/images/product-fallback.png';
   }
 
   hasActiveAttributeFilters(): boolean {
     return Object.keys(this.attributeFilters).length > 0;
   }
 
-  getActiveAttributeFiltersText(): string {
-    const count = Object.values(this.attributeFilters).reduce(
-      (sum, values) => sum + values.length,
-      0
-    );
-    return `${count} فلتر نشط`;
-  }
-
-  getActiveAttributeFilters(): { key: string; values: string[] }[] {
-    return Object.entries(this.attributeFilters).map(([key, values]) => ({
-      key,
-      values,
-    }));
-  }
-
-  clearAttributeFilter(key: string): void {
-    delete this.attributeFilters[key];
-    this.currentPage = 1;
-    this.loadProducts(0);
-  }
-
-  clearAllAttributeFilters(): void {
-    this.attributeFilters = {};
-    this.currentPage = 1;
-    this.loadProducts(0);
-  }
-
-  hasActiveFilters(): boolean {
-    return !!(
-      this.statusFilter ||
-      this.categoryFilter ||
-      this.brandFilter ||
-      this.modelFilter ||
-      this.quantityFilter !== null ||
-      this.hasActiveAttributeFilters()
-    );
-  }
-
-  clearAllFilters(): void {
-    this.statusFilter = '';
-    this.categoryFilter = '';
-    this.brandFilter = '';
-    this.modelFilter = '';
-    this.quantityFilter = null;
-    this.attributeFilters = {};
-    this.searchTerm = '';
-    this.currentPage = 1;
-    this.loadProducts(0);
-  }
-
-  openAddModal(): void {
-    this.editingProduct = null;
-    this.isModalOpen = true;
-    this.errorMessage = null;
-  }
-
-  openEditModal(product: Product): void {
-    this.editingProduct = { ...product };
-    this.isModalOpen = true;
-    this.errorMessage = null;
-  }
-
-  closeModal(): void {
-    this.isModalOpen = false;
-    this.editingProduct = null;
-    this.errorMessage = null;
-  }
-
-  saveProduct(productData: any): void {
-    this.errorMessage = null;
-    const formattedAttributes = JSON.stringify(
-      productData.additionalAttributes || {}
-    );
-  }
-
-  openDeleteConfirm(product: Product): void {
-    this.deleteConfirm = {
-      isOpen: true,
-      productId: product.id,
-    };
-  }
-
-  closeDeleteConfirm(): void {
-    this.deleteConfirm = {
-      isOpen: false,
-      productId: null,
-    };
-  }
-
-  viewDetails(product: Product): void {
-    this.selectedProduct = { ...product };
-    this.isDetailsModalOpen = true;
-  }
-
-  closeDetailsModal(): void {
-    this.isDetailsModalOpen = false;
-    this.selectedProduct = null;
-  }
-
-  openEditModalFromDetails(product: Product): void {
-    this.editingProduct = { ...product };
-    this.isModalOpen = true;
-  }
-
-  openDeleteConfirmFromDetails(product: Product): void {
-    this.deleteConfirm = {
-      isOpen: true,
-      productId: product.id,
-    };
-  }
-
   retryLoad(): void {
     this.errorMessage = null;
-    this.loadProducts(this.categoryId || 0);
+    this.loadProducts(
+      this.categoryId
+        ? {
+            pageIndex: this.currentPage,
+            pageSize: this.pageSize,
+            categoryId: this.categoryId,
+            search: this.searchTerm || '',
+            status: this.statusFilter || '',
+            brand: this.brandFilter || '',
+          }
+        : undefined
+    );
   }
 
   clearError(): void {
@@ -654,4 +481,6 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
   trackByProductId(index: number, product: Product): number {
     return product.id;
   }
+
+  private activeDropdown: string | null = null;
 }

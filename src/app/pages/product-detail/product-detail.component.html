@@ -1,278 +1,434 @@
-<div class="container-fluid py-4" *ngIf="product">
-  <!-- Breadcrumb -->
-  <nav aria-label="breadcrumb" class="mb-4">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a routerLink="/">الرئيسية</a></li>
-      <li class="breadcrumb-item"><a routerLink="/products">المنتجات</a></li>
-      <li class="breadcrumb-item active" aria-current="page">
-        {{ product.name }}
-      </li>
-    </ol>
-  </nav>
+<div class="product-detail-container">
+  <!-- Loading State -->
+  <div
+    *ngIf="!loading"
+    class="loading-state"
+    role="status"
+    aria-label="جاري التحميل"
+  >
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <p class="loading-text">جاري تحميل تفاصيل المنتج...</p>
+    </div>
+  </div>
 
-  <!-- Product Details -->
-  <div class="row">
-    <!-- Product Media -->
-    <div class="col-lg-6 mb-4">
-      <div class="product-media card shadow-sm">
-        <!-- Main Media Display -->
-        <div class="main-media mb-3">
-          <ng-container
-            *ngIf="
-              selectedMediaIndex === -1 ||
-              getAllMedia()[selectedMediaIndex]?.mediaType === 'image'
-            "
-          >
-            <img
-              [src]="
-                selectedMediaIndex === -1
-                  ? product.mainImageURL || 'p1.png'
-                  : getAllMedia()[selectedMediaIndex]?.mediaURL ||
-                    product.mainImageURL ||
-                    'p1.png'
-              "
-              alt="{{ product.name }}"
-              class="img-fluid rounded media-image"
-              (click)="
-                openImageZoom(
-                  selectedMediaIndex === -1
-                    ? product.mainImageURL
-                    : getAllMedia()[selectedMediaIndex]?.mediaURL
-                )
-              "
-              (error)="onImageError($event)"
-              role="button"
-              aria-label="تكبير الصورة"
-            />
-          </ng-container>
-          <ng-container
-            *ngIf="
-              selectedMediaIndex !== -1 &&
-              getAllMedia()[selectedMediaIndex]?.mediaType === 'video'
-            "
-          >
-            <video
-              [src]="getAllMedia()[selectedMediaIndex]?.mediaURL"
-              controls
-              class="img-fluid rounded media-video"
-              aria-label="تشغيل الفيديو"
-              autoplay
-              muted
-            ></video>
-          </ng-container>
-        </div>
+  <!-- Error State -->
+  <div *ngIf="!loading && error" class="error-state">
+    <div class="error-content">
+      <div class="error-icon">⚠️</div>
+      <h2 class="error-title">حدث خطأ</h2>
+      <p class="error-message">{{ error }}</p>
+      <button class="retry-button" (click)="reloadProduct()" type="button">
+        إعادة المحاولة
+      </button>
+    </div>
+  </div>
 
-        <!-- Media Thumbnails -->
-        <div
-          class="thumbnail-media"
-          *ngIf="getAllMedia().length > 0 || product.mainImageURL"
-        >
-          <div class="row g-2">
-            <!-- Main Image Thumbnail -->
-            <div class="col-3" *ngIf="product.mainImageURL">
-              <div class="thumbnail-wrapper">
-                <img
-                  [src]="product.mainImageURL"
-                  alt="{{ product.name }}"
-                  class="img-fluid rounded thumbnail"
-                  [class.active]="selectedMediaIndex === -1"
-                  (click)="selectMedia(-1)"
-                  (error)="onImageError($event)"
-                  role="button"
-                  aria-label="تحديد الصورة الرئيسية"
-                />
+  <!-- Product Content -->
+  <div *ngIf="loading && !error && product" class="product-content">
+    <!-- Breadcrumb Navigation -->
+    <nav class="breadcrumb-nav" aria-label="مسار التنقل">
+      <div class="container">
+        <ol class="breadcrumb-list">
+          <li class="breadcrumb-item">
+            <a routerLink="/" class="breadcrumb-link">
+              <i class="fas fa-home"></i>
+              <span class="breadcrumb-text">الرئيسية</span>
+            </a>
+          </li>
+          <li class="breadcrumb-separator">
+            <i class="fas fa-chevron-left"></i>
+          </li>
+          <li class="breadcrumb-item">
+            <a routerLink="/products" class="breadcrumb-link">
+              <span class="breadcrumb-text">المنتجات</span>
+            </a>
+          </li>
+          <li class="breadcrumb-separator">
+            <i class="fas fa-chevron-left"></i>
+          </li>
+          <li class="breadcrumb-item breadcrumb-current">
+            <span class="breadcrumb-text">{{ product.name }}</span>
+          </li>
+        </ol>
+      </div>
+    </nav>
+
+    <div class="container">
+      <!-- Product Header -->
+      <div class="product-header-section">
+        <h1 class="product-main-title">{{ product.name }}</h1>
+        <!-- <div class="product-meta-info">
+          <span class="product-model"
+            >موديل: {{ product.model || product.name }}</span
+          >
+          <span class="product-category">{{ product.categoryName }}</span>
+          <span
+            class="product-status"
+            [ngClass]="getStatusClass(product.status)"
+          >
+            {{ getStatusText(product.status) }}
+          </span>
+        </div> -->
+      </div>
+
+      <!-- Main Product Section -->
+      <div class="product-main-section">
+        <!-- Media Gallery Section -->
+        <div class="media-gallery-section">
+          <div class="gallery-container">
+            <h2 class="section-title">معرض الوسائط</h2>
+
+            <!-- Main Media Display -->
+            <div class="main-media-display">
+              <div class="media-viewer">
+                <div *ngIf="imageLoading" class="media-loading">
+                  <div class="spinner small"></div>
+                </div>
+
+                <!-- Image Display -->
+                <div
+                  *ngIf="getCurrentMediaType() === 'image'"
+                  class="image-viewer"
+                >
+                  <img
+                    [src]="getCurrentMediaUrl()"
+                    [alt]="product.name"
+                    class="main-media-image"
+                    (click)="openImageZoom(getCurrentMediaUrl())"
+                    (load)="onImageLoad()"
+                    (error)="onImageError($event)"
+                  />
+                  <div class="zoom-indicator">
+                    <i class="fas fa-search-plus"></i>
+                    <span>انقر للتكبير</span>
+                  </div>
+                </div>
+
+                <!-- Video Display -->
+                <div
+                  *ngIf="getCurrentMediaType() === 'video'"
+                  class="video-viewer"
+                >
+                  <video
+                    [src]="getCurrentMediaUrl()"
+                    controls
+                    class="main-media-video"
+                    preload="metadata"
+                  ></video>
+                </div>
+
+                <!-- PDF Display -->
+                <div *ngIf="getCurrentMediaType() === 'pdf'" class="pdf-viewer">
+                  <div class="pdf-preview">
+                    <i class="fas fa-file-pdf"></i>
+                    <h3>مستند PDF</h3>
+                    <p>انقر لفتح المستند</p>
+                    <a
+                      [href]="getCurrentMediaUrl()"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="pdf-open-btn"
+                    >
+                      <i class="fas fa-external-link-alt"></i>
+                      فتح المستند
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
-            <!-- Other Media Thumbnails -->
-            <div
-              class="col-3"
-              *ngFor="let media of getAllMedia(); let i = index"
-            >
-              <div
-                class="thumbnail-wrapper"
-                [class.video-thumbnail]="media.mediaType === 'video'"
+
+            <!-- Media Categories Tabs -->
+            <div class="media-tabs">
+              <button
+                class="media-tab"
+                [class.active]="activeMediaTab === 'images'"
+                (click)="setActiveMediaTab('images')"
+                type="button"
               >
-                <ng-container *ngIf="media.mediaType === 'image'">
+                <i class="fas fa-images"></i>
+                <span>الصور ({{ getImages().length + 1 }})</span>
+              </button>
+              <button
+                class="media-tab"
+                [class.active]="activeMediaTab === 'videos'"
+                (click)="setActiveMediaTab('videos')"
+                type="button"
+              >
+                <i class="fas fa-video"></i>
+                <span>الفيديوهات ({{ getVideos().length }})</span>
+              </button>
+              <button
+                class="media-tab"
+                [class.active]="activeMediaTab === 'documents'"
+                (click)="setActiveMediaTab('documents')"
+                type="button"
+              >
+                <i class="fas fa-file-pdf"></i>
+                <span>المستندات ({{ getPdfs().length }})</span>
+              </button>
+            </div>
+
+            <!-- Media Thumbnails -->
+            <div class="media-thumbnails">
+              <!-- Images Tab Content -->
+              <div *ngIf="activeMediaTab === 'images'" class="thumbnails-grid">
+                <!-- Main Product Image -->
+                <button
+                  *ngIf="product.mainImageURL"
+                  (click)="selectMedia(-1)"
+                  class="thumbnail-btn image-thumb"
+                  [class.active]="selectedMediaIndex === -1"
+                  type="button"
+                >
                   <img
-                    [src]="
-                      media.imageThumbnailURL || media.mediaURL || 'p1.png'
-                    "
-                    alt="{{ product.name }}"
-                    class="img-fluid rounded thumbnail"
-                    [class.active]="selectedMediaIndex === i"
-                    (click)="selectMedia(i)"
-                    (error)="onImageError($event)"
-                    role="button"
-                    aria-label="تحديد الصورة"
+                    [src]="product.mainImageURL"
+                    [alt]="product.name + ' - الصورة الرئيسية'"
+                    class="thumbnail-image"
                   />
-                </ng-container>
-                <ng-container *ngIf="media.mediaType === 'video'">
+                  <div class="thumbnail-label">الصورة الرئيسية</div>
+                </button>
+
+                <!-- Additional Images -->
+                <button
+                  *ngFor="let media of getImages(); let i = index"
+                  (click)="selectMedia(i)"
+                  class="thumbnail-btn image-thumb"
+                  [class.active]="
+                    selectedMediaIndex === i &&
+                    getCurrentMediaType() === 'image'
+                  "
+                  type="button"
+                >
+                  <img
+                    [src]="media.imageThumbnailURL || media.mediaURL"
+                    [alt]="product.name + ' - صورة ' + (i + 1)"
+                    class="thumbnail-image"
+                  />
+                  <div class="thumbnail-label">صورة {{ i + 1 }}</div>
+                </button>
+              </div>
+
+              <!-- Videos Tab Content -->
+              <div *ngIf="activeMediaTab === 'videos'" class="thumbnails-grid">
+                <button
+                  *ngFor="let media of getVideos(); let i = index"
+                  (click)="selectVideoMedia(i)"
+                  class="thumbnail-btn video-thumb"
+                  [class.active]="
+                    selectedMediaIndex === i &&
+                    getCurrentMediaType() === 'video'
+                  "
+                  type="button"
+                >
                   <video
                     [src]="media.mediaURL"
-                    class="img-fluid rounded thumbnail"
-                    [class.active]="selectedMediaIndex === i"
-                    (click)="selectMedia(i)"
+                    [poster]="media.imageThumbnailURL"
+                    class="thumbnail-video"
                     muted
-                    aria-label="تحديد الفيديو"
+                    preload="metadata"
                   ></video>
-                  <div class="play-button">
+                  <div class="video-overlay">
                     <i class="fas fa-play"></i>
                   </div>
-                </ng-container>
+                  <div class="thumbnail-label">فيديو {{ i + 1 }}</div>
+                </button>
+              </div>
+
+              <!-- Documents Tab Content -->
+              <div
+                *ngIf="activeMediaTab === 'documents'"
+                class="documents-grid"
+              >
+                <div
+                  *ngFor="let media of getPdfs(); let i = index"
+                  class="document-item"
+                >
+                  <div class="document-icon">
+                    <i class="fas fa-file-pdf"></i>
+                  </div>
+                  <div class="document-info">
+                    <h4 class="document-title">مستند {{ i + 1 }}</h4>
+                    <p class="document-description">دليل المنتج والمواصفات</p>
+                    <div class="document-actions">
+                      <a
+                        [href]="getPdfUrl(media.mediaURL || '')"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="doc-preview-btn"
+                        type="button"
+                      >
+                        <i class="fas fa-eye"></i>
+                        معاينة
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- PDF Documents -->
-        <div class="pdf-documents mt-4" *ngIf="getPdfs().length > 0">
-          <h5 class="card-title mb-3">مستندات المنتج</h5>
-          <div class="row g-3">
-            <div class="col-md-6" *ngFor="let pdf of getPdfs(); let i = index">
-              <a
-                [href]="getPdfUrl(pdf.mediaURL)"
-                target="_blank"
-                class="pdf-card card h-100 text-decoration-none"
-              >
-                <div class="card-body text-center">
-                  <i class="fas fa-file-pdf fa-2x text-danger mb-2"></i>
-                  <p class="card-text text-muted mb-0">مستند {{ i + 1 }}</p>
+        <!-- Product Information (keep existing) -->
+        <div class="product-info-section">
+          <div class="info-container">
+            <!-- Price Section -->
+            <div class="price-section">
+              <div class="price-display">
+                <h3 class="details-title">تفاصيل المنتج</h3>
+              </div>
+            </div>
+
+            <!-- Product Details -->
+            <div class="product-details-card" *ngIf="product">
+              <div class="details-list">
+                <div class="detail-item">
+                  <i class="fas fa-cube"></i>
+                  <div class="detail-content">
+                    <span class="detail-label">الموديل</span>
+                    <span class="detail-value">{{ product.model }}</span>
+                  </div>
                 </div>
-              </a>
+                <div class="detail-item">
+                  <i class="fas fa-palette"></i>
+                  <div class="detail-content">
+                    <span class="detail-label">البراند</span>
+                    <span class="detail-value">{{ product.brand }}</span>
+                  </div>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-tools"></i>
+                  <div class="detail-content">
+                    <span class="detail-label">الفئة</span>
+                    <span class="detail-value"
+                      >{{ product.categoryName }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Quantity and Actions -->
+                <div class="purchase-section">
+                  <div class="action-buttons">
+                    <button
+                      class="btn-primary"
+                      type="button"
+                      *ngIf="product.status !== 'إيجار'"
+                    >
+                      <i class="fas fa-shopping-cart"></i>
+                      <span>شراء الآن</span>
+                    </button>
+                    <button
+                      class="btn-secondary"
+                      type="button"
+                      *ngIf="product.status !== 'شراء'"
+                      (click)="confirmLease(product.id)"
+                    >
+                      <i class="fas fa-cart-plus"></i>
+                      <span>إيجار الآن</span>
+                    </button>
+                  </div>
+
+                  <!-- <div class="additional-actions">
+                    <button class="btn-link" type="button">
+                      <i class="fas fa-share-alt"></i>
+                      <span>مشاركة المنتج</span>
+                    </button>
+                    <button class="btn-link" type="button">
+                      <i class="fas fa-heart"></i>
+                      <span>إضافة للمفضلة</span>
+                    </button>
+                  </div> -->
+                </div>
+
+                <!-- Features Section -->
+                <!-- <div class="features-section">
+              <h3 class="features-title">المميزات الرئيسية</h3>
+              <ul class="features-list">
+                <li class="feature-item">
+                  <i class="fas fa-check-circle"></i>
+                  <span>تصميم عصري وأنيق</span>
+                </li>
+                <li class="feature-item">
+                  <i class="fas fa-check-circle"></i>
+                  <span>مساحة تخزين واسعة</span>
+                </li>
+                <li class="feature-item">
+                  <i class="fas fa-check-circle"></i>
+                  <span>سهولة في التنظيف والصيانة</span>
+                </li>
+                <li class="feature-item">
+                  <i class="fas fa-check-circle"></i>
+                  <span>مقاوم للرطوبة والخدوش</span>
+                </li>
+                <li class="feature-item">
+                  <i class="fas fa-check-circle"></i>
+                  <span>يتحمل وزن حتى 50 كجم</span>
+                </li>
+              </ul>
+            </div> -->
+                <!-- </div> -->
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Product Info -->
-    <div class="col-lg-6">
-      <div class="product-info card shadow-sm p-4">
-        <h1 class="product-title mb-3">{{ product.name }}</h1>
-        <div class="product-meta mb-3">
-          <span class="badge bg-secondary me-2">{{
-            product.categoryName || "غير محدد"
-          }}</span>
-          <span class="text-muted">رقم المنتج: #{{ product.id }}</span>
-        </div>
-        <div class="product-brand-model mb-3">
-          <p class="mb-1">
-            <strong>العلامة التجارية:</strong> {{ product.brand || "غير محدد" }}
-          </p>
-          <p class="mb-1">
-            <strong>الموديل:</strong> {{ product.model || "غير محدد" }}
-          </p>
-        </div>
-
-        <div class="product-description mb-4">
-          <h5>وصف المنتج</h5>
-          <p class="text-muted">
-            {{ product.description || "لا يوجد وصف متاح" }}
-          </p>
-        </div>
-
-        <!--  -->
-        <div class="product-actions">
-          <div class="d-grid gap-2 d-md-flex" *ngIf="product.status === 'شراء'">
-            <button
-              class="btn btn-warning btn-lg flex-fill"
-              aria-label="إضافة إلى السلة"
-            >
-              <i class="fas fa-store"></i>
-              شراء
-            </button>
-            <button
-              class="btn btn-warning btn-lg flex-fill"
-              aria-label="إضافة إلى السلة"
-            >
-              <i class="fas fa-handshake"></i>
-              ايجار
-            </button>
+      <!-- Product Description -->
+      <div class="description-section" *ngIf="product.description">
+        <h2 class="section-title">وصف المنتج</h2>
+        <div class="description-content">
+          <div class="description-highlights">
+            <ul>
+              {{
+                product.description
+              }}
+            </ul>
           </div>
-          <div
-            class="d-grid gap-2 d-md-flex"
-            *ngIf="product.status === 'ايجار و شراء'"
+        </div>
+      </div>
+
+      <!-- Related Products -->
+      <section *ngIf="relatedProducts.length > 0" class="related-section">
+        <h2 class="section-title">منتجات مشابهة</h2>
+        <div class="related-grid">
+          <article
+            *ngFor="let relatedProduct of relatedProducts"
+            class="related-card"
           >
-            <button
-              class="btn btn-warning btn-lg flex-fill"
-              aria-label="إضافة إلى السلة"
-            >
-              <i class="fas fa-shopping-cart me-2"></i>
-              شراء
-            </button>
-          </div>
+            <div class="related-image-wrapper">
+              <img
+                [src]="relatedProduct || 'assets/images/default-product.jpg'"
+                [alt]="relatedProduct.name"
+                class="related-image"
+              />
+            </div>
+            <div class="related-content">
+              <h3 class="related-name">{{ relatedProduct.name }}</h3>
+              <a
+                [routerLink]="['/products', relatedProduct.id]"
+                class="related-link"
+              >
+                عرض التفاصيل
+              </a>
+            </div>
+          </article>
         </div>
+      </section>
 
-        <!-- Additional Attributes -->
-        <div
-          class="additional-attributes mt-4"
-          *ngIf="getAdditionalAttributes().length > 0"
-        >
-          <h5>خصائص إضافية</h5>
-          <ul class="list-unstyled">
-            <li *ngFor="let attr of getAdditionalAttributes()">
-              <strong>{{ attr.key }}:</strong> {{ attr.value }}
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Image Zoom Modal -->
-  <div
-    class="image-zoom"
-    *ngIf="showImageZoom"
-    (click)="closeImageZoom()"
-    role="dialog"
-    aria-label="تكبير الصورة"
-  >
-    <div class="image-zoom-content" (click)="$event.stopPropagation()">
-      <img [src]="zoomedImageUrl" alt="صورة مكبرة" class="img-fluid" />
-      <button
-        class="btn btn-close"
-        (click)="closeImageZoom()"
-        aria-label="إغلاق التكبير"
-      ></button>
-    </div>
-  </div>
-
-  <!-- Related Products -->
-  <div class="related-products mt-5" *ngIf="relatedProducts.length > 0">
-    <h3 class="mb-4">منتجات ذات صلة</h3>
-    <div class="row">
+      <!-- Image Zoom Modal -->
       <div
-        class="col-lg-3 col-md-6 mb-4"
-        *ngFor="let relatedProduct of relatedProducts"
+        *ngIf="showImageZoom"
+        class="zoom-overlay"
+        (click)="closeImageZoom()"
+        role="dialog"
+        aria-modal="true"
       >
-        <div class="card h-100 shadow-sm">
-          <img
-            [src]="relatedProduct.image"
-            alt="{{ relatedProduct.nameAr }}"
-            class="card-img-top"
-          />
-          <div class="card-body">
-            <h6 class="card-title">{{ relatedProduct.nameAr }}</h6>
-            <p class="card-text text-warning">
-              {{ relatedProduct.price | currency : "SAR" : "symbol" : "1.2-2" }}
-            </p>
-            <a
-              [routerLink]="['/product', relatedProduct.id]"
-              class="btn btn-outline-warning btn-sm"
-              [attr.aria-label]="'عرض تفاصيل ' + relatedProduct.nameAr"
-            >
-              عرض التفاصيل
-            </a>
-          </div>
+        <div class="zoom-content" (click)="$event.stopPropagation()">
+          <img [src]="zoomedImageUrl" alt="صورة مكبرة" class="zoomed-image" />
+          <button (click)="closeImageZoom()" class="zoom-close" type="button">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- Loading State -->
-<div *ngIf="loading" class="text-center py-5">
-  <div class="spinner-border text-warning" role="status">
-    <span class="visually-hidden">جاري التحميل...</span>
   </div>
 </div>

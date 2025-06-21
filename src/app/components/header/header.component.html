@@ -43,79 +43,98 @@
           <div class="brand-tagline">معدات البناء والتعدين</div>
         </div>
       </a>
-      
+
       <!-- Search Bar (Desktop) -->
       <div class="search-container d-none d-lg-flex flex-grow-1 mx-4">
         <div class="search-wrapper" [class.active]="isSearchOpen">
           <form (ngSubmit)="onSearch()" class="search-form">
             <div class="input-group">
-              <input 
-                type="text" 
+              <input
+                type="text"
                 id="searchInput"
-                class="form-control search-input" 
-                placeholder="ابحث عن المنتجات، المعدات، قطع الغيار..."
+                class="form-control search-input"
+                placeholder="ابحث عن المنتجات..."
                 [(ngModel)]="searchQuery"
-                name="search">
-              <button class="btn btn-warning search-btn" type="submit" title="بحث">
+                name="search"
+              />
+              <button
+                class="btn btn-warning search-btn"
+                type="submit"
+                title="بحث"
+              >
                 <i class="fas fa-search"></i>
               </button>
             </div>
           </form>
         </div>
       </div>
-      
+
       <!-- Mobile Toggle Button -->
-      <button 
-        class="navbar-toggler d-lg-none" 
-        type="button" 
+      <button
+        class="navbar-toggler d-lg-none"
+        type="button"
         (click)="toggleMenu()"
         [attr.aria-expanded]="isMenuOpen"
-        aria-label="Toggle navigation">
-        <i class="fas" [class.fa-bars]="!isMenuOpen" [class.fa-times]="isMenuOpen"></i>
+        aria-label="Toggle navigation"
+      >
+        <i
+          class="fas"
+          [class.fa-bars]="!isMenuOpen"
+          [class.fa-times]="isMenuOpen"
+        ></i>
       </button>
-      
+
       <!-- Right Side Icons -->
       <div class="header-actions d-flex align-items-center">
-        <!-- Search Button (Mobile) -->
-        <button class="btn btn-link nav-icon d-lg-none" (click)="toggleSearch()" title="بحث">
-          <i class="fas fa-search"></i>
-        </button>
-        
         <!-- User Profile -->
         <div class="dropdown">
-          <button class="btn btn-link nav-icon dropdown-toggle" type="button" (click)="profile()" data-bs-toggle="dropdown" title="القائمة الشخصية">
+          <button
+            class="btn btn-link nav-icon dropdown-toggle"
+            type="button"
+            (click)="profile()"
+            data-bs-toggle="dropdown"
+            title="القائمة الشخصية"
+          >
             <i class="fas fa-user"></i>
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" routerLink="/profile">
-              <i class="fas fa-user me-2"></i>الملف الشخصي
-            </a></li>
-            <li><a class="dropdown-item" routerLink="/profile">
-              <i class="fas fa-shopping-bag me-2"></i>طلباتي
-            </a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">
-              <i class="fas fa-sign-out-alt me-2"></i>تسجيل الخروج
-            </a></li>
+            <li>
+              <a class="dropdown-item" routerLink="/profile">
+                <i class="fas fa-user me-2"></i>الملف الشخصي
+              </a>
+            </li>
+
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a class="dropdown-item" href="#">
+                <i class="fas fa-sign-out-alt me-2"></i>تسجيل الخروج
+              </a>
+            </li>
           </ul>
         </div>
-        
-        <!-- Shopping Cart -->
-        <app-cart-icon></app-cart-icon>
+        <!-- Search Button (Mobile) -->
+        <button
+          class="btn btn-link nav-icon d-lg-none"
+          (click)="toggleSearch()"
+          title="بحث"
+        >
+          <i class="fas fa-search"></i>
+        </button>
       </div>
-      
+
       <!-- Navigation Menu -->
       <div class="collapse navbar-collapse" [class.show]="isMenuOpen">
         <!-- Mobile Search -->
         <div class="mobile-search d-lg-none" [class.show]="isSearchOpen">
           <form (ngSubmit)="onSearch()" class="search-form">
             <div class="input-group mb-3">
-              <input 
-                type="text" 
-                class="form-control" 
+              <input
+                type="text"
+                class="form-control"
                 placeholder="ابحث عن المنتجات..."
                 [(ngModel)]="searchQuery"
-                name="mobileSearch">
+                name="mobileSearch"
+              />
               <button class="btn btn-warning" type="submit" title="بحث">
                 <i class="fas fa-search"></i>
               </button>
@@ -125,17 +144,18 @@
 
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item" *ngFor="let item of navItems">
-            <a 
-              class="nav-link" 
-              [routerLink]="item.path" 
+            <a
+              class="nav-link"
+              [routerLink]="item.path"
               routerLinkActive="active"
-              [routerLinkActiveOptions]="{exact: item.exact}"
-              (click)="closeMenu()">
+              [routerLinkActiveOptions]="{ exact: item.exact }"
+              (click)="closeMenu()"
+            >
               <i [class]="item.icon + ' me-2 d-lg-none'"></i>
               {{ item.label }}
             </a>
           </li>
-          
+
           <!-- Categories Dropdown -->
           <!-- <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">

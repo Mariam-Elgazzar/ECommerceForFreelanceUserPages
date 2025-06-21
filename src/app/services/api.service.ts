@@ -51,16 +51,16 @@ export class ApiService {
     videoType:
       'Invalid video file type. Allowed types: .mp4, .webm, .mov, .mkv.',
   };
-  private readonly maxRetries = 1000; // Maximum number of retries for failed requests
+  private readonly maxRetries = 3; // Maximum number of retries for failed requests
 
   constructor(private http: HttpClient) {}
 
   getAllProducts(
-    params: ProductParams = { pageIndex: 1, pageSize: 10 }
+    params: ProductParams = { pageIndex: 1, pageSize: 12 }
   ): Observable<PaginatedResponse<Product>> {
     let httpParams = new HttpParams()
       .set('pageIndex', params.pageIndex.toString())
-      .set('pageSize', Math.min(params.pageSize, 10).toString())
+      .set('pageSize', Math.min(params.pageSize, 12).toString())
       .set('search', params.search ?? '');
     // .set('description', params.description ?? '');
     if (params.attributesFilter) {
@@ -96,6 +96,12 @@ export class ApiService {
             categoryId: params.categoryId,
             pageIndex: params.pageIndex,
             pageSize: params.pageSize,
+            status: params.status,
+            brand: params.brand,
+            model: params.model,
+            quantity: params.quantity,
+            sortProp: params.sortProp,
+            sortDirection: params.sortDirection,
           })
         )
       );

@@ -223,6 +223,14 @@ export class AuthService {
         tap((response) => {
           this.setUser({
             ...user,
+            firstName: fName,
+            lastName: lName,
+            email: email,
+            phoneNumber: phoneNumber,
+            address: address,
+            message: response.message,
+            token: response.token,
+            roles: response.roles,
           });
         }),
         catchError(this.handleError)

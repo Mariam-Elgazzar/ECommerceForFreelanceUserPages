@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { CartService } from '../../services/cart.service';
 import { Product, ProductParams } from '../../interfaces/product.interface';
 import { Category, CategoryParams } from '../../interfaces/category.interface';
+import { FormsModule } from '@angular/forms';
 // import { Product } from '../../models/product';
 // import { Category } from '../../models/category';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
@@ -31,8 +32,10 @@ export class HomeComponent implements OnInit {
   totalItems = 0;
 
   // Filters
+  searchQuery = '';
+
   searchTerm = '';
-  statusFilter = '';
+  statusFilter = ''; // Default to 'both'
   categoryFilter = '';
   attributeFilters: Record<string, string[]> = {};
   sortColumn = 'name';
@@ -41,7 +44,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private productService: ApiService,
     private categoryService: ApiService,
-    private route: ActivatedRoute // Use RouterModule to access route parameters
+    private route: ActivatedRoute, // Use RouterModule to access route parameters
+    private router: Router
   ) {}
   ngOnInit(): void {
     const idParam = this.route.snapshot.queryParamMap.get('id');
@@ -78,7 +82,7 @@ export class HomeComponent implements OnInit {
       pageIndex: this.currentPage,
       pageSize: this.pageSize,
       search: this.searchTerm,
-      status: this.statusFilter || undefined,
+      status: this.statusFilter,
       categoryId:
         cat != 0
           ? cat
@@ -91,9 +95,9 @@ export class HomeComponent implements OnInit {
 
     this.productService.getAllProducts(params).subscribe({
       next: (response) => {
-        this.products = response.data.map((product: any) => ({
+        this.products = response.data.map((product: Product) => ({
           ...product,
-          status: product.status ?? '',
+          status: product.status ?? '', // Default to 'both' if not provided
           brand: product.brand ?? '',
           model: product.model ?? '',
           createdAt: product.createdAt ?? '',
@@ -120,5 +124,13 @@ export class HomeComponent implements OnInit {
 
   getStarArray(rating: number): number[] {
     return Array(Math.floor(rating)).fill(0);
+  }
+  onSearch() {
+    if (this.searchQuery.trim()) {
+      this.router.navigate(['/products'], {
+        queryParams: { search: this.searchQuery.trim() },
+      });
+      this.searchQuery = '';
+    }
   }
 }

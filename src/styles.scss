@@ -42,8 +42,8 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--secondary-color);
 
   &:hover, &:focus {
-    background-color: darken(#ffc107, 10%);
-    border-color: darken(#ffc107, 10%);
+    background-color:  #ffc107, 10%;
+    border-color:  #ffc107, 10%;
     color: var(--secondary-color);
   }
 }

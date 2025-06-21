@@ -39,10 +39,13 @@
         <div class="input-group input-group-lg">
           <input
             type="text"
-            class="form-control text-end"
-            placeholder="ابحث برقم القطعة أو الوصف أو موديل الآلة..."
+            id="searchInput"
+            class="form-control search-input"
+            placeholder="ابحث عن المنتجات..."
+            [(ngModel)]="searchQuery"
+            name="search"
           />
-          <button class="btn btn-primary" type="button">
+          <button class="btn btn-primary" (click)="onSearch()" title="بحث">
             <i class="bi bi-search"></i>
             بحث
           </button>
@@ -82,7 +85,6 @@
           <div class="card-body text-center">
             <h5 class="card-title">{{ category.name }}</h5>
             <p class="card-text text-muted">{{ category.description }}</p>
-            <!-- <p class="text-primary fw-bold">{{ category. }} قطعة</p> -->
             <a
               [routerLink]="['/products']"
               [queryParams]="{ id: category.id }"
@@ -98,7 +100,7 @@
 </section>
 
 <!-- Featured Products Section -->
-<section class="py-5 bg-light" *ngIf="!loading && !errorMessage">
+<!-- <section class="py-5 bg-light" *ngIf="!loading && !errorMessage">
   <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-5">
       <h2 class="fw-bold">القطع المميزة</h2>
@@ -118,7 +120,9 @@
               class="card-img-top product-image"
             />
             <span
-              *ngIf="product.status === 'الايجار' ? 'البيع' : ' والبيع الايجار'"
+              *ngIf="
+                product.status === statusFilter ? 'البيع' : ' والبيع الايجار'
+              "
               class="badge bg-danger position-absolute top-0 start-0 m-2"
             >
               {{ product.status }}
@@ -130,18 +134,17 @@
             <h6 class="card-title">{{ product.name }}</h6>
             <!-- <p class="text-muted small">رقم القطعة: {{ product.partNumber }}</p> -->
 
-            <!-- <div class="d-flex align-items-center mb-2">
+<!-- <div class="d-flex align-items-center mb-2">
               <div class="rating-stars me-2">
                 <i class="bi bi-star-fill" *ngFor="let star of getStarArray(product.rating)"></i>
               </div> -->
-            <!-- <small class="text-muted">{{ product.rating }} ({{ product.reviews }} تقييم)</small>
+<!-- <small class="text-muted">{{ product.rating }} ({{ product.reviews }} تقييم)</small>
             </div> -->
 
-            <div class="d-flex justify-content-between align-items-center">
-              <!-- <span class="h5 mb-0 text-primary">${{ product. }}</span> -->
+<!-- <div class="d-flex justify-content-between align-items-center">
               <div>
                 <a
-                  [routerLink]="['/products', product.id]"
+                  [routerLink]="['/products', product.categoryName]"
                   class="btn btn-sm btn-outline-primary me-2"
                 >
                   عرض
@@ -149,8 +152,7 @@
                 <button class="btn btn-sm btn-primary" title="product.status ">
                   <i class="bi bi-cart-plus"></i>
                 </button>
-                <!-- [disabled]="product.stock <= 0" -->
-                <!-- (click)="addToCart(product)" -->
+
               </div>
             </div>
           </div>
@@ -158,7 +160,7 @@
       </div>
     </div>
   </div>
-</section>
+</section> -->
 
 <!-- Features Section -->
 <section class="py-5">

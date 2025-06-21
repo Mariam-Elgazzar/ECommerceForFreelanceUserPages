@@ -3,20 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
-import { CartIconComponent } from '../../shared/components/cart-icon/cart-icon.component';
 import { Category, CategoryParams } from '../../interfaces/category.interface';
-// import { Category } from "../../models/category"
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    RouterLinkActive,
-    FormsModule,
-    CartIconComponent,
-  ],
+  imports: [CommonModule, RouterLink, RouterLinkActive, FormsModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
