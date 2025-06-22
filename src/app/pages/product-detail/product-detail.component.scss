@@ -940,7 +940,7 @@
 
   .action-buttons {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 1rem;
     margin-bottom: 1.5rem;
 
@@ -1033,15 +1033,20 @@
     }
   }
 }
-
+.description-box{
+padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 3rem;
+  }
 // Description Section
 .description-section {
   background: #fff;
   border-radius: 15px;
-  padding: 2rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  margin-bottom: 3rem;
+
   width: 100%;
+  direction: rtl;
+
+
   .section-title {
     font-size: 1.5rem;
     font-weight: 700;
@@ -1069,18 +1074,21 @@
       line-height: 1.8;
       font-size: 1.1rem;
       margin-bottom: 2rem;
+      text-align: right;
     }
 
     .description-highlights {
       background: #f8f9fa;
       padding: 2rem;
       border-radius: 12px;
-      border-left: 4px solid #ffc107;
+      border-right: 4px solid #ffc107;
 
-      h4 {
+      span {
         color: #2c3e50;
         margin-bottom: 1rem;
-        font-weight: 600;
+        font-size: larger;
+        font-weight: 700;
+        text-align: right;
       }
 
       ul {
@@ -1090,13 +1098,14 @@
 
         li {
           position: relative;
-          padding: 0.5rem 0 0.5rem 2rem;
+          padding: 0.5rem 2rem 0.5rem 0;
           color: #495057;
+          text-align: right;
 
           &::before {
             content: '✓';
             position: absolute;
-            left: 0;
+            right: 0;
             top: 0.5rem;
             color: #28a745;
             font-weight: bold;

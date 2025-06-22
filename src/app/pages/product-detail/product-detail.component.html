@@ -308,11 +308,12 @@
 
                 <!-- Quantity and Actions -->
                 <div class="purchase-section">
-                  <div class="action-buttons">
+                  <div class="action-buttons d-felx flex-column">
                     <button
                       class="btn-primary"
                       type="button"
                       *ngIf="product.status !== 'إيجار'"
+                      (click)="confirm(product.id, 'شراء')"
                     >
                       <i class="fas fa-shopping-cart"></i>
                       <span>شراء الآن</span>
@@ -321,7 +322,7 @@
                       class="btn-secondary"
                       type="button"
                       *ngIf="product.status !== 'شراء'"
-                      (click)="confirmLease(product.id)"
+                      (click)="confirm(product.id, 'إيجار')"
                     >
                       <i class="fas fa-cart-plus"></i>
                       <span>إيجار الآن</span>
@@ -341,39 +342,34 @@
                 </div>
 
                 <!-- Features Section -->
-                <!-- <div class="features-section">
-              <h3 class="features-title">المميزات الرئيسية</h3>
-              <ul class="features-list">
-                <li class="feature-item">
-                  <i class="fas fa-check-circle"></i>
-                  <span>تصميم عصري وأنيق</span>
-                </li>
-                <li class="feature-item">
-                  <i class="fas fa-check-circle"></i>
-                  <span>مساحة تخزين واسعة</span>
-                </li>
-                <li class="feature-item">
-                  <i class="fas fa-check-circle"></i>
-                  <span>سهولة في التنظيف والصيانة</span>
-                </li>
-                <li class="feature-item">
-                  <i class="fas fa-check-circle"></i>
-                  <span>مقاوم للرطوبة والخدوش</span>
-                </li>
-                <li class="feature-item">
-                  <i class="fas fa-check-circle"></i>
-                  <span>يتحمل وزن حتى 50 كجم</span>
-                </li>
-              </ul>
-            </div> -->
-                <!-- </div> -->
+                <div
+                  class="description-section"
+                  dir="rtl"
+                  *ngIf="product.additionalAttributes"
+                >
+                  <h3 class="section-title">المميزات الرئيسية</h3>
+                  <div class="description-content">
+                    <div class="description-highlights">
+                      <ul>
+                        <li *ngFor="let attribute of getAdditionalAttributes()">
+                          <span class="feature-label"
+                            >{{ attribute.key }}:
+                          </span>
+                          <span class="fs-6">{{ attribute.value }}</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
               </div>
+              <!-- 1x -->
             </div>
           </div>
         </div>
+        <!-- 2x -->
       </div>
       <!-- Product Description -->
-      <div class="description-section" *ngIf="product.description">
+      <div class="description-section description-box" *ngIf="product.description">
         <h2 class="section-title">وصف المنتج</h2>
         <div class="description-content">
           <div class="description-highlights">

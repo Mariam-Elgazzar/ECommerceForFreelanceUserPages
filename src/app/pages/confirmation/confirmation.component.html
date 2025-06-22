@@ -6,14 +6,17 @@
           <i class="bi bi-check-circle-fill text-success"></i>
         </div>
 
-        <h1 class="display-4 fw-bold text-success mb-3">تم إرسال طلبك بنجاح!</h1>
+        <h1 class="display-4 fw-bold text-success mb-3">
+          تم إرسال طلبك بنجاح!
+        </h1>
 
         <p class="lead text-muted mb-4">
-          شكراً لك على ثقتك بنا. تم استلام طلبك وسيتم التواصل معك قريباً لتأكيد التفاصيل.
+          شكراً لك على ثقتك بنا. تم استلام طلبك وسيتم التواصل معك قريباً لتأكيد
+          التفاصيل.
         </p>
       </div>
 
-      <div class="card mb-4">
+      <!-- <div class="card mb-4">
         <div class="card-body text-center">
           <h5 class="card-title mb-3">رقم الطلب</h5>
           <div class="order-number">
@@ -23,9 +26,9 @@
             احتفظ بهذا الرقم للمراجعة المستقبلية
           </p>
         </div>
-      </div>
+      </div> -->
 
-      <div class="card mb-4">
+      <!-- <div class="card mb-4">
         <div class="card-header">
           <h5 class="mb-0">
             <i class="bi bi-clock me-2"></i>
@@ -50,7 +53,10 @@
               </div>
               <div class="timeline-content">
                 <h6>التواصل للتأكيد</h6>
-                <p class="text-muted mb-0">سيتصل بك أحد ممثلي خدمة العملاء خلال 24 ساعة لتأكيد الطلب وطريقة الدفع</p>
+                <p class="text-muted mb-0">
+                  سيتصل بك أحد ممثلي خدمة العملاء خلال 24 ساعة لتأكيد الطلب
+                  وطريقة الدفع
+                </p>
               </div>
             </div>
 
@@ -60,7 +66,9 @@
               </div>
               <div class="timeline-content">
                 <h6>تحضير الطلب</h6>
-                <p class="text-muted mb-0">سيتم تحضير وتغليف طلبك بعناية فائقة</p>
+                <p class="text-muted mb-0">
+                  سيتم تحضير وتغليف طلبك بعناية فائقة
+                </p>
               </div>
             </div>
 
@@ -75,7 +83,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <div class="card mb-4">
         <div class="card-header">
@@ -85,7 +93,9 @@
           </h5>
         </div>
         <div class="card-body">
-          <p class="mb-3">إذا كان لديك أي استفسارات حول طلبك، لا تتردد في التواصل معنا:</p>
+          <p class="mb-3">
+            إذا كان لديك أي استفسارات حول طلبك، لا تتردد في التواصل معنا:
+          </p>
 
           <div class="row">
             <div class="col-md-6 mb-3">
@@ -93,7 +103,11 @@
                 <i class="bi bi-telephone-fill text-primary me-3 fs-4"></i>
                 <div>
                   <h6 class="mb-1">الهاتف</h6>
-                  <a href="tel:{{ supportPhone }}" class="text-decoration-none">{{ supportPhone }}</a>
+                  <a
+                    href="tel:{{ supportPhone }}"
+                    class="text-decoration-none"
+                    >{{ supportPhone }}</a
+                  >
                 </div>
               </div>
             </div>
@@ -103,7 +117,11 @@
                 <i class="bi bi-envelope-fill text-primary me-3 fs-4"></i>
                 <div>
                   <h6 class="mb-1">البريد الإلكتروني</h6>
-                  <a href="mailto:{{ supportEmail }}" class="text-decoration-none">{{ supportEmail }}</a>
+                  <a
+                    href="mailto:{{ supportEmail }}"
+                    class="text-decoration-none"
+                    >{{ supportEmail }}</a
+                  >
                 </div>
               </div>
             </div>
@@ -111,18 +129,19 @@
 
           <div class="alert alert-info mt-3">
             <i class="bi bi-info-circle me-2"></i>
-            <strong>ساعات العمل:</strong> الأحد - الخميس: 8:00 ص - 5:00 م (بتوقيت السعودية)
+            <strong>ساعات العمل:</strong> الأحد - الخميس: 8:00 ص - 5:00 م
+            (بتوقيت السعودية)
           </div>
         </div>
       </div>
 
       <div class="text-center">
-        <a routerLink="/" class="btn btn-primary btn-lg me-3">
+        <a routerLink="/" class="btn btn-warning btn-lg ms-3">
           <i class="bi bi-house me-2"></i>
           العودة للرئيسية
         </a>
 
-        <a routerLink="/products" class="btn btn-outline-primary btn-lg">
+        <a routerLink="/products" class="btn btn-outline-warning btn-lg">
           <i class="bi bi-cart me-2"></i>
           متابعة التسوق
         </a>

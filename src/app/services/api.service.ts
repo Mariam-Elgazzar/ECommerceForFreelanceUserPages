@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { catchError, retry, throwError, type Observable } from 'rxjs';
+import { catchError, retry, throwError, map, type Observable } from 'rxjs';
 import { environment } from '../../enviroments/enviroment';
 import {
   HttpClient,
@@ -82,7 +82,7 @@ export class ApiService {
     console.log(params);
 
     return this.http
-      .get<PaginatedResponse<Product>>(
+      .get<PaginatedResponse<Product> | Result>(
         `${this.baseUrl}/Products/GetAllProducts`,
         {
           params: httpParams,
@@ -90,6 +90,29 @@ export class ApiService {
       )
       .pipe(
         retry({ count: this.maxRetries }),
+        // Type guard to ensure only PaginatedResponse<Product> is emitted
+        // If not, throw an error to be caught by catchError
+        // This fixes the type error by ensuring the observable type matches
+        // the method's return type
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // (RxJS map must be imported if not already)
+        map((response: PaginatedResponse<Product> | Result) => {
+          if (
+            response &&
+            typeof response === 'object' &&
+            'data' in response &&
+            'pageIndex' in response &&
+            'pageSize' in response &&
+            'totalCount' in response
+          ) {
+            return response as PaginatedResponse<Product>;
+          }
+          throw new ApiError(
+            500,
+            'server',
+            (response as Result)?.message || 'Invalid response from server'
+          );
+        }),
         catchError((error) =>
           this.handleError(error, 'getAllProducts', {
             search: params.search,

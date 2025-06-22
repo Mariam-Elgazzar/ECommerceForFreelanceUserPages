@@ -110,6 +110,22 @@
                           {{ getFieldError("address") }}
                         </div>
                       </div>
+                      <div class="mb-3" *ngIf="productStatus === 'إيجار'">
+                        <label for="rentalPeriod" class="form-label"
+                          >فترة الإيجار *</label
+                        >
+                        <input
+                          type="text"
+                          id="rentalPeriod"
+                          class="form-control"
+                          formControlName="rentalPeriod"
+                          [class.is-invalid]="isFieldInvalid('rentalPeriod')"
+                          placeholder="أدخل فترة الإيجار (مثال: 3 أشهر)"
+                        />
+                        <div class="invalid-feedback">
+                          {{ getFieldError("rentalPeriod") }}
+                        </div>
+                      </div>
                       <div class="d-flex justify-content-between mt-4">
                         <a
                           routerLink="/products"
@@ -123,8 +139,7 @@
                           class="btn btn-warning"
                           (click)="submitOrder()"
                         >
-                          إتمام الطلب <i class="fas ms-2"></i>
-                          {{ productId }}
+                          إتمام الطلب <i class="fas fa-success ms-2"></i>
                         </button>
                       </div>
                     </div>

@@ -6,20 +6,39 @@
     <!-- Cart Items -->
     <div class="cart-items">
       <div class="cart-item" *ngIf="product">
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center justify-content-center">
           <img
             [src]="product.mainImageURL"
-            alt="item.product.nameAr"
+            alt="product.name"
             class="item-image"
           />
-          <div class="item-details">
+          <!-- <div class="item-details">
             <h6 class="item-title mb-1">{{ product.name }}</h6>
-            <div class="d-flex justify-content-between"></div>
-          </div>
+            <div class="d-flex justify-content-between">
+              <span class="item-price">
+                {{ product.brand }}
+              </span>
+              <span class="item-quantity"> {{ product.model }}</span>
+            </div>
+          </div> -->
         </div>
       </div>
     </div>
+    <div class="order-summary mt-4">
+      <div class="summary-row">
+        <span class="total">الاسم</span>
+        <span>{{ product.name }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="total">البراند</span>
 
+        <span>{{ product.brand }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="total">الموديل</span>
+        <span>{{ product.model }}</span>
+      </div>
+    </div>
     <!-- Order Summary
     <div class="order-summary mt-4">
       <div class="summary-row">

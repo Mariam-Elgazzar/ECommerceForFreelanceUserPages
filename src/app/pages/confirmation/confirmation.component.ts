@@ -7,7 +7,7 @@ import { RouterModule, ActivatedRoute } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './confirmation.component.html',
-  styleUrls: ['./confirmation.component.scss']
+  styleUrls: ['./confirmation.component.scss'],
 })
 export class ConfirmationComponent implements OnInit {
   orderId: string = '';
@@ -17,8 +17,8 @@ export class ConfirmationComponent implements OnInit {
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.orderId = params['orderId'] || 'CAT-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+    this.route.queryParams.subscribe((params) => {
+      // this.orderId = params['orderId'] || 'CAT-' + Math.random().toString(36).substr(2, 9).toUpperCase();
     });
   }
 }

@@ -30,6 +30,20 @@
     margin-bottom: 0.5rem;
   }
 
+  .action-buttons {
+   display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    .btn {
+      flex: 1;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
   .btn {
     transition: all 0.3s ease;
   }
@@ -64,12 +78,21 @@
 }
 
 .pagination {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+  justify-content: center; /* Center pagination items */
+  gap: 0.5rem; /* Add spacing between items */
+  padding: 0.5rem;
+
   .page-link {
     color: #ffc107;
-    border-color: #ffc107;
+    border: 1px solid #ffc107;
     border-radius: 5px;
     margin: 0 2px;
     padding: 0.5rem 1rem;
+    font-size: 1rem; /* Default font size */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+    cursor: pointer;
 
     &:hover {
       background-color: #ffc107;
@@ -89,8 +112,36 @@
     cursor: not-allowed;
     opacity: 0.5;
   }
-}
 
+  /* Responsive adjustments for smaller screens */
+  @media (max-width: 768px) {
+    .page-link {
+      padding: 0.4rem 0.8rem; /* Slightly smaller padding */
+      font-size: 0.9rem; /* Smaller font size for tablets */
+      margin: 0 1px; /* Reduced margin */
+    }
+  }
+
+  @media (max-width: 576px) {
+    flex-direction: row; /* Keep row layout but wrap */
+    gap: 0.3rem; /* Smaller gap for mobile */
+
+    .page-link {
+      padding: 0.3rem 0.6rem; /* Even smaller padding for mobile */
+      font-size: 0.8rem; /* Smaller font size for mobile */
+      min-width: 2rem; /* Ensure buttons are still clickable */
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .page-link {
+      padding: 0.25rem 0.5rem; /* Further reduce padding for very small screens */
+      font-size: 0.75rem; /* Even smaller font size */
+      min-width: 1.8rem; /* Maintain clickable area */
+    }
+  }
+}
 .collapse {
   transition: height 0.3s ease;
 }

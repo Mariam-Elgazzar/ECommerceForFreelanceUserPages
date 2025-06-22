@@ -45,6 +45,7 @@ export class CheckoutComponent implements OnInit {
   isSubmitting = false;
   product!: Product; // Placeholder for product data
   productId: string | null = null; // To store product ID from query params
+  productStatus: string | null = null; // Placeholder for product status
   // Shipping options
   shippingOptions = [
     { id: 'standard', name: 'الشحن القياسي', price: 0, time: '3-7 أيام عمل' },
@@ -66,11 +67,15 @@ export class CheckoutComponent implements OnInit {
     // Check if cart is empty
     this.productId =
       this.activatedRoute.snapshot.queryParamMap.get('productId');
+    this.productStatus =
+      this.activatedRoute.snapshot.queryParamMap.get('status');
     this.initForm();
+    this.loadSavedFormData();
   }
 
   private initForm(): void {
-    this.checkoutForm = this.fb.group({
+    // Prepare form controls
+    const formControls: { [key: string]: any } = {
       // Step 1: Personal Information
       fullName: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
@@ -78,6 +83,7 @@ export class CheckoutComponent implements OnInit {
 
       // Step 2: Shipping Information
       address: ['', [Validators.required, Validators.minLength(5)]],
+
       // city: ['', [Validators.required]],
       // country: ['المملكة العربية السعودية', [Validators.required]],
       // shippingMethod: ['standard', [Validators.required]],
@@ -87,7 +93,25 @@ export class CheckoutComponent implements OnInit {
       // cardNumber: [''],
       // cardExpiry: [''],
       // cardCvv: [''],
-    });
+    };
+
+    // Add rentalPeriod control conditionally
+    if (this.productStatus === 'إيجار') {
+      formControls['rentalPeriod'] = [
+        '',
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.pattern(
+            /^[0-9]+ (سنين|سنوات|شهور|أشهر|اشهر|ايام|أيام|يوم|شهر|سنة|سنه)$/
+          ),
+        ],
+      ];
+    } else {
+      // formControls['rentalPeriod'] = [null];
+    }
+
+    this.checkoutForm = this.fb.group(formControls);
 
     // Add conditional validators for credit card fields
     this.checkoutForm.get('paymentMethod')?.valueChanges.subscribe((method) => {
@@ -107,6 +131,19 @@ export class CheckoutComponent implements OnInit {
         this.checkoutForm.get(field)?.updateValueAndValidity();
       });
     });
+  }
+
+  private loadSavedFormData(): void {
+    const savedData = localStorage.getItem('checkoutFormData');
+    if (savedData) {
+      const formData = JSON.parse(savedData);
+      this.checkoutForm.patchValue(formData);
+    }
+  }
+
+  private saveFormData(): void {
+    const formValue = this.checkoutForm.value;
+    localStorage.setItem('checkoutFormData', JSON.stringify(formValue));
   }
 
   nextStep(): void {
@@ -209,7 +246,11 @@ export class CheckoutComponent implements OnInit {
       if (field.errors['minlength']) {
         return `الحد الأدنى ${field.errors['minlength'].requiredLength} أحرف`;
       }
-      if (field.errors['pattern']) return 'تنسيق غير صحيح';
+      if (field.errors['pattern']) {
+        return fieldName === 'rentalPeriod'
+          ? 'يجب أن تكون مدة الإيجار رقمًا صحيحًا متبوعًا بوحدة (يوم، شهر، سنة)'
+          : 'تنسيق غير صحيح';
+      }
     }
 
     return '';
@@ -282,7 +323,7 @@ export class CheckoutComponent implements OnInit {
             email: formValue.email,
             phoneNumber: formValue.phone,
             address: formValue.address,
-            rentalPeriod: 0,
+            rentalPeriod: formValue.rentalPeriod || undefined,
             status: 'إيجار',
             productId: this.product.id,
           };
@@ -313,11 +354,12 @@ export class CheckoutComponent implements OnInit {
             next: (response: CheckoutResponse) => {
               this.isSubmitting = false;
               if (response.isSuccess) {
+                this.saveFormData(); // Save form data to local storage on success
                 this.toastService.show({
                   message: response.message || 'تم إنشاء الطلب بنجاح!',
                   type: 'success',
                 });
-                this.router.navigate(['/confirmation']);
+                this.router.navigate(['/confirmation', checkoutData.productId]);
               } else {
                 this.toastService.show({
                   message: response.message || 'فشل في إنشاء الطلب',

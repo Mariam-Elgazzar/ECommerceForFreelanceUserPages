@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, ActivatedRoute } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ApiService } from '../../services/api.service';
@@ -102,7 +102,8 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
     private categoryService: ApiService,
     private brandService: BrandService,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {
     this.searchSubscription = this.searchSubject
       .pipe(debounceTime(300), distinctUntilChanged())
@@ -155,13 +156,13 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
     this.modelSubscription.unsubscribe();
   }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event): void {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.searchable-select')) {
-      this.activeDropdown = null;
-    }
-  }
+  // @HostListener('document:click', ['$event'])
+  // onDocumentClick(event: Event): void {
+  //   const target = event.target as HTMLElement;
+  //   if (!target.closest('.searchable-select')) {
+  //     this.activeDropdown = null;
+  //   }
+  // }
   private loadBrands(): void {
     this.brandService.getAllBrands().subscribe({
       next: (brands) => {
@@ -320,7 +321,6 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
           : undefined,
       brand: this.brandFilter || '',
       model: this.modelFilter || '',
-      sortDirection: this.sortDirection,
     };
 
     this.productService.getAllProducts(params).subscribe({
@@ -342,12 +342,10 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
+        this.loading = false;
         this.filteredProducts = [];
         this.totalItems = 0;
-        this.errorMessage = 'فشل في تحميل المنتجات. الرجاء المحاولة لاحقاً.';
-        this.loading = false;
-
-        console.error('Error loading products:', error);
+        this.cdr.markForCheck();
       },
     });
   }
@@ -481,6 +479,17 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
   trackByProductId(index: number, product: Product): number {
     return product.id;
   }
-
+  confirm(id: number, status: string): void {
+    if (id) {
+      this.router.navigate(['/checkout'], {
+        queryParams: { productId: id, status: status },
+      });
+    } else {
+      console.error('No product selected for lease confirmation');
+      //  {
+      //   queryParams: { productId: this.product.id },
+      // }
+    }
+  }
   private activeDropdown: string | null = null;
 }

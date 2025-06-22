@@ -160,7 +160,7 @@
               <small class="text-muted">{{ product.categoryName }}</small>
             </div>
             <div class="d-grid gap-2">
-              <button class="btn btn-warning" (click)="addToCart(product)">
+              <!-- <button class="btn btn-warning" (click)="addToCart(product)">
                 {{ product.status }}
               </button>
               <a
@@ -168,7 +168,33 @@
                 class="btn btn-outline-secondary btn-sm"
               >
                 عرض التفاصيل
-              </a>
+              </a> -->
+              <div class="action-buttons d-felx flex-column">
+                <button
+                  class="btn btn-warning"
+                  type="button"
+                  *ngIf="product.status !== 'إيجار'"
+                  (click)="confirm(product.id, 'شراء')"
+                >
+                  <i class="fas fa-shopping-cart"></i>
+                  <span>شراء الآن</span>
+                </button>
+                <button
+                  class="btn btn-success"
+                  type="button"
+                  *ngIf="product.status !== 'شراء'"
+                  (click)="confirm(product.id, 'إيجار')"
+                >
+                  <i class="fas fa-cart-plus"></i>
+                  <span>إيجار الآن</span>
+                </button>
+                <a
+                  [routerLink]="['/products', product.id]"
+                  class="btn btn-outline-secondary btn-sm"
+                >
+                  عرض التفاصيل
+                </a>
+              </div>
             </div>
           </div>
         </div>

@@ -148,6 +148,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
             quantity: product.quantity ?? 0,
             mainImageURL: product.mainImageURL ?? '',
             categoryName: product.categoryName ?? '',
+            additionalAttributes: product.additionalAttributes
+              ? typeof product.additionalAttributes === 'string'
+                ? JSON.parse(product.additionalAttributes)
+                : product.additionalAttributes
+              : {},
           };
           const firstVideoIndex =
             this.getVideos().length > 0
@@ -457,11 +462,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   trackByProductId(index: number, product: Product): number {
     return product.id;
   }
-  confirmLease(id: number): void {
+  confirm(id: number, status: string): void {
     if (this.product) {
       console.log(`Confirming lease for product: ${this.product.name}`);
       this.router.navigate(['/checkout'], {
-        queryParams: { productId: id },
+        queryParams: { productId: id, status: status },
       });
     } else {
       console.error('No product selected for lease confirmation');
