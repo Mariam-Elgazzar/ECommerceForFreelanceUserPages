@@ -70,6 +70,7 @@ export class CheckoutComponent implements OnInit {
     this.productStatus =
       this.activatedRoute.snapshot.queryParamMap.get('status');
     this.initForm();
+    //
     this.loadSavedFormData();
   }
 
