@@ -324,7 +324,7 @@ export class CheckoutComponent implements OnInit {
             phoneNumber: formValue.phone,
             address: formValue.address,
             rentalPeriod: formValue.rentalPeriod || undefined,
-            status: 'إيجار',
+            status: this.productStatus || '',
             productId: this.product.id,
           };
 
