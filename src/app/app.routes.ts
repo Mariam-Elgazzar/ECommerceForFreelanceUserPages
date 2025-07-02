@@ -21,7 +21,7 @@ export const routes: Routes = [
       import('./pages/product-detail/product-detail.component').then(
         (m) => m.ProductDetailComponent
       ),
-    title: 'تفاصيل المنتج -  العوفي',
+    title: 'العوفي - تفاصيل المنتج',
   },
   {
     path: 'categories',
@@ -29,13 +29,13 @@ export const routes: Routes = [
       import('./pages/categories/categories.component').then(
         (m) => m.CategoriesComponent
       ),
-    title: 'الفئات -  العوفي',
+    title: 'العوفي - الفئات',
   },
   {
     path: 'cart',
     loadComponent: () =>
       import('./pages/cart/cart.component').then((m) => m.CartComponent),
-    title: 'سلة التسوق -  العوفي',
+    title: 'العوفي - سلة التسوق',
   },
   {
     path: 'checkout',
@@ -43,7 +43,7 @@ export const routes: Routes = [
       import('./pages/checkout/checkout.component').then(
         (m) => m.CheckoutComponent
       ),
-    title: 'الدفع -  العوفي',
+    title: 'العوفي -  إتمام الطلب',
   },
   {
     path: 'confirmation/:id',
