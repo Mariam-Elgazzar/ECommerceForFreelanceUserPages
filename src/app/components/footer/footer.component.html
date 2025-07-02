@@ -9,14 +9,15 @@
             <div class="footer-logo mb-3">
               <img
                 src="/placeholder.svg?height=60&width=200"
-                alt="كاتربيلر"
+                alt="العوفي"
                 class="logo"
               />
             </div>
             <p class="footer-description">
-              الوكيل المعتمد لشركة كاتربيلر في المملكة العربية السعودية. نقدم
-              أحدث المعدات الثقيلة وقطع الغيار الأصلية مع خدمات ما بعد البيع
-              المتميزة منذ أكثر من 50 عاماً.
+              شركة رائدة موثوقة ومعتمدة في استيراد المعدات الثقيلة المستعملة
+              عالية الجودة التزامنا هو توفير أحدث الالات وقطع الغيار الأصلية
+              وخدمة ما بعد البيع لا مثيل لها لضمان سير أعمالكم المتميزة منذ أكثر
+              من 27 عاماً.
             </p>
 
             <!-- Contact Info -->
@@ -82,12 +83,14 @@
         </div>
 
         <!-- Newsletter & Social -->
-        <!-- <div class="col-lg-2 col-md-6 mb-4">
+        <div class="col-lg-2 col-md-6 mb-4">
           <div class="footer-section">
-            <h5 class="footer-title">تابعنا</h5>
-
+            <h5 class="footer-title">تابعنا على</h5>
+            <!--
             <div class="newsletter mb-4">
-              <p class="newsletter-text">اشترك في النشرة الإخبارية للحصول على آخر الأخبار والعروض</p>
+              <p class="newsletter-text">
+                اشترك في النشرة الإخبارية للحصول على آخر الأخبار والعروض
+              </p>
               <form (ngSubmit)="subscribeNewsletter()" class="newsletter-form">
                 <div class="input-group">
                   <input
@@ -96,17 +99,22 @@
                     placeholder="بريدك الإلكتروني"
                     [(ngModel)]="newsletterEmail"
                     name="newsletter"
-                    required>
-                  <button class="btn btn-warning" type="submit" aria-label="إرسال البريد الإلكتروني">
+                    required
+                  />
+                  <button
+                    class="btn btn-warning"
+                    type="submit"
+                    aria-label="إرسال البريد الإلكتروني"
+                  >
                     <i class="fas fa-paper-plane"></i>
                   </button>
                 </div>
               </form>
-            </div>
+            </div> -->
 
-           Social Links
+            <!-- Social Links -->
             <div class="social-links">
-              <h6 class="social-title">تابعنا على</h6>
+              <!-- <h6 class="social-title">تابعنا على</h6> -->
               <div class="social-icons">
                 <a
                   *ngFor="let social of socialLinks"
@@ -114,13 +122,14 @@
                   target="_blank"
                   rel="noopener noreferrer"
                   [title]="social.platform"
-                  class="social-icon">
+                  class="social-icon"
+                >
                   <i [class]="social.icon"></i>
                 </a>
               </div>
             </div>
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
   </div>
@@ -150,16 +159,14 @@
       <div class="row align-items-center">
         <div class="col-md-6">
           <div class="copyright">
-            <p>
-              &copy; {{ currentYear }} كاتربيلر السعودية. جميع الحقوق محفوظة.
-            </p>
+            <p>&copy; {{ currentYear }} العوفي السعودية. جميع الحقوق محفوظة.</p>
           </div>
         </div>
         <div class="col-md-6">
           <div class="footer-bottom-links">
-            <a href="#" class="me-3">سياسة الخصوصية</a>
+            <!-- <a href="#" class="me-3">سياسة الخصوصية</a>
             <a href="#" class="me-3">شروط الاستخدام</a>
-            <a href="#" class="me-3">سياسة الإرجاع</a>
+            <a href="#" class="me-3">سياسة الإرجاع</a> -->
             <button class="btn btn-link scroll-top" (click)="scrollToTop()">
               <i class="fas fa-arrow-up"></i>
               العودة للأعلى

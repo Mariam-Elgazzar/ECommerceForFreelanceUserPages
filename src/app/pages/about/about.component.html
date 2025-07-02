@@ -19,12 +19,14 @@
       <div class="about-content">
         <h2 class="mb-4">رائدون في مجال المعدات الثقيلة</h2>
         <p class="lead mb-4">
-          منذ أكثر من 50 عاماً، نحن الوكيل المعتمد لشركة كاتربيلر في المملكة العربية السعودية،
-          نقدم أحدث المعدات الثقيلة وقطع الغيار الأصلية مع خدمات ما بعد البيع المتميزة.
+          منذ أكثر من 27 عاماً، نحن شركة رائدة موثوقة ومعتمدة في استيراد المعدات
+          الثقيلة المستعملة عالية الجودة في المملكة العربية السعودية، نقدم أحدث
+          المعدات الثقيلة وقطع الغيار الأصلية مع خدمات ما بعد البيع المتميزة.
         </p>
         <p class="mb-4">
-          نفخر بكوننا جزءاً من رؤية المملكة 2030، حيث نساهم في تطوير البنية التحتية
-          والمشاريع الضخمة التي تشهدها المملكة من خلال توفير أفضل المعدات والحلول التقنية.
+          نفخر بكوننا جزءاً من رؤية المملكة 2030، حيث نساهم في تطوير البنية
+          التحتية والمشاريع الضخمة التي تشهدها المملكة من خلال توفير أفضل
+          المعدات والحلول التقنية.
         </p>
         <div class="d-flex gap-3">
           <a routerLink="/products" class="btn btn-warning btn-lg">
@@ -38,7 +40,11 @@
     </div>
     <div class="col-lg-6">
       <div class="about-image">
-        <img src="/image.jpg" alt="معدات كاتربيلر" class="img-fluid rounded shadow">
+        <img
+          src="/image.jpg"
+          alt="معدات كاتربيلر"
+          class="img-fluid rounded shadow"
+        />
       </div>
     </div>
   </div>
@@ -48,7 +54,10 @@
     <div class="col-12">
       <div class="stats-section bg-warning text-dark rounded p-5">
         <div class="row text-center">
-          <div class="col-lg-3 col-md-6 mb-4 mb-lg-0" *ngFor="let stat of stats">
+          <div
+            class="col-lg-3 col-md-6 mb-4 mb-lg-0"
+            *ngFor="let stat of stats"
+          >
             <div class="stat-item">
               <h2 class="display-4 fw-bold mb-2">{{ stat.number }}</h2>
               <p class="h5 mb-0">{{ stat.label }}</p>
@@ -91,8 +100,9 @@
             <h3 class="mb-0">رسالتنا</h3>
           </div>
           <p class="text-muted">
-            تقديم أفضل المعدات الثقيلة والحلول التقنية المتطورة لعملائنا في المملكة العربية السعودية،
-            مع ضمان أعلى معايير الجودة والخدمة لدعم مشاريع التنمية والبناء.
+            تقديم أفضل المعدات الثقيلة والحلول التقنية المتطورة لعملائنا في
+            المملكة العربية السعودية، مع ضمان أعلى معايير الجودة والخدمة لدعم
+            مشاريع التنمية والبناء.
           </p>
         </div>
       </div>
@@ -106,7 +116,8 @@
           </div>
           <p class="text-muted">
             أن نكون الشريك الأول والأكثر ثقة في مجال المعدات الثقيلة في المنطقة،
-            ونساهم في تحقيق رؤية المملكة 2030 من خلال دعم مشاريع التطوير والبنية التحتية.
+            ونساهم في تحقيق رؤية المملكة 2030 من خلال دعم مشاريع التطوير والبنية
+            التحتية.
           </p>
         </div>
       </div>
@@ -114,27 +125,6 @@
   </div>
 
   <!-- Team Section -->
-  <div class="row mb-5">
-    <div class="col-12">
-      <h2 class="text-center mb-5">فريق العمل</h2>
-      <div class="row g-4">
-        <div class="col-lg-3 col-md-6" *ngFor="let member of team">
-          <div class="team-card">
-            <div class="card border-0 shadow-sm h-100">
-              <div class="card-img-wrapper">
-                <img [src]="member.image" alt="{{member.name}}" class="card-img-top">
-              </div>
-              <div class="card-body text-center p-4">
-                <h5 class="card-title mb-1">{{ member.name }}</h5>
-                <p class="text-warning mb-2">{{ member.position }}</p>
-                <p class="card-text text-muted small">{{ member.description }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Certifications -->
   <!-- <div class="row mb-5">
@@ -167,13 +157,14 @@
       <div class="cta-section bg-dark text-white rounded p-5 text-center">
         <h3 class="mb-3">جاهزون لخدمتكم</h3>
         <p class="lead mb-4">
-          تواصلوا معنا اليوم للحصول على استشارة مجانية حول احتياجاتكم من المعدات الثقيلة
+          تواصلوا معنا اليوم للحصول على استشارة مجانية حول احتياجاتكم من المعدات
+          الثقيلة
         </p>
         <div class="d-flex justify-content-center gap-3">
           <a routerLink="/support" class="btn btn-warning btn-lg">
             احصل على استشارة
           </a>
-          <a href="tel:+966111234567" class="btn btn-outline-light btn-lg">
+          <a href="tel:+966530185141" class="btn btn-outline-light btn-lg">
             <i class="fas fa-phone me-2"></i>
             اتصل بنا الآن
           </a>
