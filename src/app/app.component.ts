@@ -1,10 +1,16 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { CommonModule, ViewportScroller } from '@angular/common';
+import {
+  NavigationEnd,
+  NavigationStart,
+  Router,
+  RouterOutlet,
+} from '@angular/router';
 import { LoaderComponent } from './shared/components/loader/loader.component';
 import { ToastComponent } from './shared/components/toast/toast.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { filter, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -22,4 +28,20 @@ import { FooterComponent } from './components/footer/footer.component';
 })
 export class AppComponent {
   title = 'العوفي - معدات البناء والتعدين';
+  constructor(
+    private router: Router,
+    private viewportScroller: ViewportScroller
+  ) {}
+  private destroy$ = new Subject<void>();
+
+  ngOnInit(): void {
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      });
+  }
 }
