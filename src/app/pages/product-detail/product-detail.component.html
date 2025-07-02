@@ -345,7 +345,10 @@
                 <div
                   class="description-section"
                   dir="rtl"
-                  *ngIf="product.additionalAttributes"
+                  *ngIf="
+                    product.additionalAttributes &&
+                    product.additionalAttributes.length > 0
+                  "
                 >
                   <h3 class="section-title">المميزات الرئيسية</h3>
                   <div class="description-content">
@@ -369,7 +372,10 @@
         <!-- 2x -->
       </div>
       <!-- Product Description -->
-      <div class="description-section description-box" *ngIf="product.description">
+      <div
+        class="description-section description-box"
+        *ngIf="product.description"
+      >
         <h2 class="section-title">وصف المنتج</h2>
         <div class="description-content">
           <div class="description-highlights">

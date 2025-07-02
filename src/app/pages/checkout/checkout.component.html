@@ -111,19 +111,49 @@
                         </div>
                       </div>
                       <div class="mb-3" *ngIf="productStatus === 'إيجار'">
-                        <label for="rentalPeriod" class="form-label"
-                          >فترة الإيجار *</label
+                        <label class="form-label">فترة الإيجار *</label>
+                        <div class="input-group">
+                          <input
+                            type="number"
+                            id="rentalPeriodNumber"
+                            class="form-control"
+                            formControlName="rentalPeriodNumber"
+                            [class.is-invalid]="
+                              isFieldInvalid('rentalPeriodNumber')
+                            "
+                            placeholder="أدخل العدد (مثال: 3)"
+                            min="1"
+                          />
+                          <select
+                            id="rentalPeriodUnit"
+                            class="form-select"
+                            formControlName="rentalPeriodUnit"
+                            [class.is-invalid]="
+                              isFieldInvalid('rentalPeriodUnit')
+                            "
+                          >
+                            <option value="" disabled selected>
+                              اختر الوحدة
+                            </option>
+                            <option
+                              *ngFor="let unit of timeUnits"
+                              [value]="unit"
+                            >
+                              {{ unit }}
+                            </option>
+                          </select>
+                        </div>
+                        <div
+                          class="invalid-feedback d-block"
+                          *ngIf="isFieldInvalid('rentalPeriodNumber')"
                         >
-                        <input
-                          type="text"
-                          id="rentalPeriod"
-                          class="form-control"
-                          formControlName="rentalPeriod"
-                          [class.is-invalid]="isFieldInvalid('rentalPeriod')"
-                          placeholder="أدخل فترة الإيجار (مثال: 3 ايام)"
-                        />
-                        <div class="invalid-feedback">
-                          {{ getFieldError("rentalPeriod") }}
+                          {{ getFieldError("rentalPeriodNumber") }}
+                        </div>
+                        <div
+                          class="invalid-feedback d-block"
+                          *ngIf="isFieldInvalid('rentalPeriodUnit')"
+                        >
+                          {{ getFieldError("rentalPeriodUnit") }}
                         </div>
                       </div>
                       <div class="d-flex justify-content-between mt-4">

@@ -34,7 +34,9 @@ export interface CheckoutForm {
   email: string;
   phone: string;
   address: string;
-  rentalPeriod?: string;
+  rentalPeriodNumber?: number;
+  rentalPeriodUnit?: string;
+
   city: string;
   country: string;
   paymentMethod: 'credit_card' | 'bank_transfer' | 'cash_on_delivery';

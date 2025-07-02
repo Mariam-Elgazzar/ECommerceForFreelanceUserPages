@@ -1,10 +1,16 @@
 import { Component } from '@angular/core';
 import { CommonModule, ViewportScroller } from '@angular/common';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import {
+  NavigationEnd,
+  NavigationStart,
+  Router,
+  RouterOutlet,
+} from '@angular/router';
 import { LoaderComponent } from './shared/components/loader/loader.component';
 import { ToastComponent } from './shared/components/toast/toast.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { filter, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -26,11 +32,16 @@ export class AppComponent {
     private router: Router,
     private viewportScroller: ViewportScroller
   ) {}
-  ngOnInit() {
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.viewportScroller.scrollToPosition([0, 0]); // Scroll to top
-      }
-    });
+  private destroy$ = new Subject<void>();
+
+  ngOnInit(): void {
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      });
   }
 }
