@@ -350,7 +350,7 @@ export class CheckoutComponent implements OnInit {
           //     console.error("Order creation error:", error)
           //   },
           // })
-
+          console.log(checkoutData);
           this.orderService.checkout(checkoutData).subscribe({
             next: (response: CheckoutResponse) => {
               this.isSubmitting = false;

@@ -50,7 +50,7 @@
             (ngModelChange)="onCategoryFilterChange($event)"
             aria-describedby="categoryFilterHelp"
           >
-            <option value="" disabled>جميع الفئات</option>
+            <option value="">جميع الفئات</option>
             <option *ngFor="let category of categories" [value]="category.id">
               {{ category.name }}
             </option>
@@ -66,7 +66,7 @@
             (ngModelChange)="onBrandFilterChange($event)"
             aria-describedby="brandFilterHelp"
           >
-            <option value="" disabled>جميع العلامات التجارية</option>
+            <option value="">جميع العلامات التجارية</option>
             <option *ngFor="let brand of brands" [value]="brand.name">
               {{ brand.name }}
             </option>
