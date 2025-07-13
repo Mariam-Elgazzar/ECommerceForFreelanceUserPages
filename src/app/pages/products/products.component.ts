@@ -131,7 +131,7 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe((params) => {
       this.categoryId = params['id'] ? Number(params['id']) : null;
       this.searchTerm = params['search'] || '';
-      this.categoryFilter = params['category'] || '';
+      this.categoryFilter = params['id'] ? params['id'] : '';
       this.brandFilter = params['brand'] || '';
       this.statusFilter = params['status'] || '';
       this.modelFilter = params['model'] || '';
