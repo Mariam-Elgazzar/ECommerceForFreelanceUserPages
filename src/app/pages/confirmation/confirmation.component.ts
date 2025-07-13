@@ -11,8 +11,8 @@ import { RouterModule, ActivatedRoute } from '@angular/router';
 })
 export class ConfirmationComponent implements OnInit {
   orderId: string = '';
-  supportEmail = 'support@catparts.com';
-  supportPhone = '1-800-CAT-PARTS';
+  supportEmail = 'aloufi01@hotmail.com';
+  supportPhone = '+966530185141';
 
   constructor(private route: ActivatedRoute) {}
 

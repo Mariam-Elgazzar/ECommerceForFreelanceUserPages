@@ -48,12 +48,12 @@ export class HeaderComponent implements OnInit {
       exact: false,
       icon: 'fas fa-headset',
     },
-    {
-      path: '/faq',
-      label: 'الأسئلة الشائعة',
-      exact: false,
-      icon: 'fas fa-question-circle',
-    },
+    // {
+    //   path: '/faq',
+    //   label: 'الأسئلة الشائعة',
+    //   exact: false,
+    //   icon: 'fas fa-question-circle',
+    // },
   ];
 
   ngOnInit(): void {

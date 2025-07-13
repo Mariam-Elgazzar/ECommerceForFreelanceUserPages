@@ -49,27 +49,27 @@ export class FooterComponent implements OnInit {
     {
       platform: 'facebook',
       icon: 'fab fa-facebook-f',
-      url: 'https://facebook.com/caterpillar',
+      url: 'https://www.facebook.com/AloufiHeavyEquipment/',
     },
-    {
-      platform: 'twitter',
-      icon: 'fab fa-twitter',
-      url: 'https://twitter.com/caterpillar',
-    },
-    {
-      platform: 'linkedin',
-      icon: 'fab fa-linkedin-in',
-      url: 'https://linkedin.com/company/caterpillar',
-    },
-    {
-      platform: 'youtube',
-      icon: 'fab fa-youtube',
-      url: 'https://youtube.com/caterpillar',
-    },
+    // {
+    //   platform: 'twitter',
+    //   icon: 'fab fa-twitter',
+    //   url: 'https://twitter.com/caterpillar',
+    // },
+    // {
+    //   platform: 'linkedin',
+    //   icon: 'fab fa-linkedin-in',
+    //   url: 'https://linkedin.com/company/caterpillar',
+    // },
+    // {
+    //   platform: 'youtube',
+    //   icon: 'fab fa-youtube',
+    //   url: 'https://youtube.com/caterpillar',
+    // },
     {
       platform: 'instagram',
       icon: 'fab fa-instagram',
-      url: 'https://instagram.com/caterpillar',
+      url: 'https://www.instagram.com/aloufiequipment/',
     },
   ];
 

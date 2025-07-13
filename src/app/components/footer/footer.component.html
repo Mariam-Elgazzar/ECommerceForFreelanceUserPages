@@ -6,12 +6,8 @@
         <!-- Company Info -->
         <div class="col-lg-4 col-md-6 mb-4">
           <div class="footer-section">
-            <div class="footer-logo mb-3">
-              <img
-                src="/placeholder.svg?height=60&width=200"
-                alt="العوفي"
-                class="logo"
-              />
+            <div class="footer-logo">
+              <img src="photo.png" alt="العوفي" class="logo" />
             </div>
             <p class="footer-description">
               شركة رائدة موثوقة ومعتمدة في استيراد المعدات الثقيلة المستعملة
@@ -49,7 +45,7 @@
         <!-- Quick Links -->
         <div class="col-lg-2 col-md-6 mb-4">
           <div class="footer-section">
-            <h5 class="footer-title">الشركة</h5>
+            <h5 class="footer-title">المؤسسة</h5>
             <ul class="footer-links">
               <li *ngFor="let link of footerLinks.company">
                 <a [routerLink]="link.path">{{ link.label }}</a>
